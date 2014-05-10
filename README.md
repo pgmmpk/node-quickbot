@@ -1,0 +1,4 @@
+node-quickbot
+=============
+
+QuickBot API
