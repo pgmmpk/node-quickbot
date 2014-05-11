@@ -36,5 +36,24 @@ module.exports = {
             30,
             30
         ];
+    },
+
+    motors: {
+        run: function(vals) {
+            console.log('MOCK robot.motors.run', vals);
+        }
+    },
+
+    sensors: {
+
+        encoder0_values: function() {
+            console.log('MOCK encoder0_values');
+            return [0, 0, 0, 0];
+        },
+
+        encoder1_values: function() {
+            console.log('MOCK encoder1_values');
+            return [0, 0, 0, 0];
+        }
     }
 };

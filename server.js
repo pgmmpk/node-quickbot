@@ -42,6 +42,19 @@ app.get('/api/quickbot/ir_raw', function(req, res) {
     res.json(quickbot.ir_raw());
 });
 
+app.post('/api/quickbot/motors/run', function(req, res) {
+    quickbot.motors.run({pwm_left: req.body.pwm_left, pwm_right: req.body.pwm_right});
+    res.json({status: "OK"});
+});
+
+app.get('/api/quickbot/sensors/encoder0_values', function(req, res) {
+    res.json(quickbot.sensors.encoder0_values());
+});
+
+app.get('/api/quickbot/sensors/encoder1_values', function(req, res) {
+    res.json(quickbot.sensors.encoder1_values());
+});
+
 app.get('/', renderIndex);
 app.get('/tools', renderIndex);
 app.get('/research', renderIndex);
