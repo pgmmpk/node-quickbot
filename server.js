@@ -44,7 +44,7 @@ app.get('/api/quickbot/ir_raw', function(req, res) {
 });
 
 app.post('/api/quickbot/motors/run', function(req, res) {
-    robot.motors().run({pwm_left: req.body.pwm_left, pwm_right: req.body.pwm_right});
+    robot.motors().run(req.body.pwm_left, req.body.pwm_right);
     res.json({status: "OK"});
 });
 
