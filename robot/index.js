@@ -1,31 +1,42 @@
-var config = require('../config'),
-    qb     = require('./qb').QB(config);
+var config = require('../config');
 
-    qb.start();
+function QbService(config, callback) {
 
-module.exports = {
+    require('./qb')(config, function(err, qb) {
 
-    speed: function(val) {
-        if (val === undefined) {
-            return qb.get_speed();
-        } else {
-            qb.set_speed(val.speed_left, val.speed_right);
-        }
-    },
+        if (err) {
+	    return collabck(err);
+	}
 
-    ticks: function() {
-        return qb.get_ticks();
-    },
+        qb.start();
+        var worker = setInterval(qb.onTimer, 10);
 
-    ir_distance: function() {
-        return qb.ir_distance();
-    },
+	var service = {};
 
-    ir_raw: function() {
-        return qb.get_ir();
-    },
+        service.speed = function(val) {
+            if (val === undefined) {
+                return qb.getSpeed();
+            } else {
+                qb.setSpeed(val.speed_left, val.speed_right);
+            }
+        };
 
-    motors: qb.motors,
+        service.ticks = function() {
+            return qb.getTicks();
+        };
 
-    sensors: qb.sensors
-};
+        service.ir_distance = function() {
+            return qb.getIrDistance();
+        };
+
+        service.ir_raw = function() {
+            return qb.getIr();
+        };
+
+        service.motors = qb.motors;
+
+        service.sensors = qb.sensors;
+
+	callback(null, service);
+});
+

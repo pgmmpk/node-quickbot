@@ -4,7 +4,7 @@ var express = require('express'),
     server  = http.createServer(app), 
     q       = require('q'),
     path    = require('path'),
-    robot   = require('./robot'),
+    robot   = require('./robot/index'),
     config  = require('./config');
 
 // all environments
