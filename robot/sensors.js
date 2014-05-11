@@ -1,11 +1,11 @@
 var bs = require('bonescript'),
-    pwmadc = require('pwm-adc');
+    pruadc = require('pru-adc');
 
 var TIMETICKS_PER_SECOND = 121000;
 
 function Sensors(config) {
 
-    var adc = pwmadc();
+    var adc = pruadc();
 
     adc.encoder0_pin(config.MOTOR_LEFT.encoder_pin);
     adc.encoder1_pin(config.MOTOR_RIGHT.encoder_pin);
