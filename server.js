@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* API */
 app.post('/api/quickbot/speed', function(req, res) {
-    robot.speed({speed_left: req.body.speed_left, speed_right: req.body.speed_right});
+    robot.setSpeed(req.body.speed_left, req.body.speed_right);
     res.json({status: "OK"});
 });
 
@@ -44,16 +44,16 @@ app.get('/api/quickbot/ir_raw', function(req, res) {
 });
 
 app.post('/api/quickbot/motors/run', function(req, res) {
-    robot.motors.run({pwm_left: req.body.pwm_left, pwm_right: req.body.pwm_right});
+    robot.motors().run({pwm_left: req.body.pwm_left, pwm_right: req.body.pwm_right});
     res.json({status: "OK"});
 });
 
 app.get('/api/quickbot/sensors/encoder0_values', function(req, res) {
-    res.json(robot.sensors.encoder0_values());
+    res.json(robot.sensors().adc.encoder0Values());
 });
 
 app.get('/api/quickbot/sensors/encoder1_values', function(req, res) {
-    res.json(robot.sensors.encoder1_values());
+    res.json(robot.sensors().adc.encoder1Values());
 });
 
 app.get('/', renderIndex);

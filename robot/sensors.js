@@ -54,6 +54,8 @@ function Sensors(config, callback) {
             });
         };
 
+	sensors.adc = adc;
+
         callback(null, sensors);
     });
 

@@ -22,31 +22,37 @@ function ensureLoaded() {
     }
 }
 
-module.exports = {
+module.exports.setSpeed = function(speed_left, speed_right) {
+    console.log('setSpeed:', speed_left, speed_right);
+    qb.setSpeed(speed_left, speed_right);
+};
 
-    service.speed = function(val) {
-        if (val === undefined) {
-            return qb.getSpeed();
-        } else {
-            qb.setSpeed(val.speed_left, val.speed_right);
-        }
-    };
+module.exports.speed = function(val) {
+    if (val === undefined) {
+        return qb.getSpeed();
+    } else {
+        qb.setSpeed(val.speed_left, val.speed_right);
+    }
+};
 
-    service.ticks = function() {
+module.exports.ticks = function() {
 
-        return qb.getTicks();
-    };
+    return qb.getTicks();
+};
 
-    service.ir_distance = function() {
-        return qb.getIrDistance();
-    };
+module.exports.ir_distance = function() {
+    return qb.getIrDistance();
+};
 
-    service.ir_raw = function() {
-        return qb.getIr();
-    };
+module.exports.ir_raw = function() {
+    return qb.getIr();
+};
 
-    service.motors = qb.motors;
+module.exports.motors = function() {
+    return qb.motors;
+};
 
-    service.sensors = qb.sensors;
+module.exports.sensors = function() {
+    return qb.sensors;
 };
 
