@@ -17,7 +17,8 @@
             $scope.result1 = '';
 
             $scope.message = 'Working. Please wait (approx 2 seconds)...'
-            robot.motors.run({pwm_left: 50, pwm_right: 50});
+            //robot.motors.run({pwm_left: 50, pwm_right: 50});
+            robot.speed({speed_left: 50, speed_right: 50});
 
             $timeout(function() {
                 robot.motors.run({pwm_left: 0, pwm_right: 0});
