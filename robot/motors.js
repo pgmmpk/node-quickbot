@@ -4,8 +4,7 @@ function Motor(pwm_pin, dir1_pin, dir2_pin) {
 
     var speed = 0.0;
 
-    //bs.pinMode(pwm_pin, bs.ANALOG_OUTPUT);
-    bs.analogWrite(pwm_pin, 0.0, 2000);
+    bs.pinMode(pwm_pin, bs.OUTPUT);
     bs.pinMode(dir1_pin, bs.OUTPUT);
     bs.pinMode(dir2_pin, bs.OUTPUT);
 
@@ -17,16 +16,16 @@ function Motor(pwm_pin, dir1_pin, dir2_pin) {
 
         run: function(speed) {
             if (speed > 0) {
-                bs.digitalWrite(dir1_pin, false);
-                bs.digitalWrite(dir2_pin, true);
+                bs.digitalWrite(dir1_pin, 0);
+                bs.digitalWrite(dir2_pin, 1);
                 bs.analogWrite(pwm_pin, speed > 100.0 ? 1.0 : speed / 100.0);
             } else if (speed < 0) {
-                bs.digitalWrite(dir1_pin, true);
-                bs.digitalWrite(dir2_pin, false);
+                bs.digitalWrite(dir1_pin, 1);
+                bs.digitalWrite(dir2_pin, 0);
                 bs.analogWrite(pwm_pin, speed < -100.0 ? 1.0 : -speed / 100.0);
             } else {
-                bs.digitalWrite(dir1_pin, false);
-                bs.digitalWrite(dir2_pin, false);
+                bs.digitalWrite(dir1_pin, 0);
+                bs.digitalWrite(dir2_pin, 0);
                 bs.analogWrite(pwm_pin, 0);
             }
 

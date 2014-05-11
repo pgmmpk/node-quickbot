@@ -1,11 +1,11 @@
 var config = require('../config'),
+    bs = require('bonescript'),
     motors = require('../robot/motors').Motors(config);
 
 
-motors.run(50, 50);
+motors.run(60, 60);
 
 setTimeout(function() {
-    motors.run(0, 0);
     motors.close();
 }, 2000);
 
