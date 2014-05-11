@@ -4,7 +4,7 @@ var express = require('express'),
     server  = http.createServer(app), 
     q       = require('q'),
     path    = require('path'),
-    quickbot= require('./quickbot');
+    robot   = require('./robot');
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -17,42 +17,42 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* API */
 app.post('/api/quickbot/speed', function(req, res) {
-    quickbot.speed({speed_left: req.body.speed_left, speed_right: req.body.speed_right});
+    robot.speed({speed_left: req.body.speed_left, speed_right: req.body.speed_right});
     res.json({status: "OK"});
 });
 
 app.get('/api/quickbot/speed', function(req, res) {
-    res.json(quickbot.speed());
+    res.json(robot.speed());
 });
 
 app.get('/api/quickbot/ticks', function(req, res) {
-    res.json(quickbot.ticks());
+    res.json(robot.ticks());
 });
 
 app.delete('/api/quickbot/ticks', function(req, res) {
-    quickbot.reset_ticks();
+    robot.reset_ticks();
     res.json({status: "OK"});
 });
 
 app.get('/api/quickbot/ir_distance', function(req, res) {
-    res.json(quickbot.ir_distance());
+    res.json(robot.ir_distance());
 });
 
 app.get('/api/quickbot/ir_raw', function(req, res) {
-    res.json(quickbot.ir_raw());
+    res.json(robot.ir_raw());
 });
 
 app.post('/api/quickbot/motors/run', function(req, res) {
-    quickbot.motors.run({pwm_left: req.body.pwm_left, pwm_right: req.body.pwm_right});
+    robot.motors.run({pwm_left: req.body.pwm_left, pwm_right: req.body.pwm_right});
     res.json({status: "OK"});
 });
 
 app.get('/api/quickbot/sensors/encoder0_values', function(req, res) {
-    res.json(quickbot.sensors.encoder0_values());
+    res.json(robot.sensors.encoder0_values());
 });
 
 app.get('/api/quickbot/sensors/encoder1_values', function(req, res) {
-    res.json(quickbot.sensors.encoder1_values());
+    res.json(robot.sensors.encoder1_values());
 });
 
 app.get('/', renderIndex);
