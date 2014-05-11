@@ -4,10 +4,11 @@ var express = require('express'),
     server  = http.createServer(app), 
     q       = require('q'),
     path    = require('path'),
-    robot   = require('./robot');
+    robot   = require('./robot'),
+    config  = require('./config');
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', config.PORT);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 //app.use(express.favicon(__dirname + '/graphics/favicon.ico'));

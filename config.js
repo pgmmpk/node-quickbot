@@ -1,7 +1,7 @@
 module.exports = {
     
     // port for HTTP server to listen on
-    PORT: 3000,
+    PORT: 3080,
 
     MOTOR_LEFT: {
         'dir1': 'P8_14',
@@ -29,7 +29,7 @@ module.exports = {
                   // ADC timer runs at about 120000 ticks per second
 
     // IR sensor calibration constants (see fit.py)
-    IR_CALIBRATION = [
+    IR_CALIBRATION: [
         [36.702127659574444, 3995.4255319148942, 1.085106382978724],
         [99.732495511669754, 3262.2980251346507, 0.66786355475763237],
         [-203.41628959275999, 3627.8959276018086, 1.642533936651585],
@@ -43,12 +43,12 @@ module.exports = {
         'distance_threshold': 7.0  // when do we flag head-on obstacle?
     },
 
-    AVOID_COLLISION = {
+    AVOID_COLLISION: {
         'speed': 40.0,  // how fast do we "jump back"?
         'distance_threshold': 10.0  // at what distance do we stop backtracking?
     },
 
-    FIND_NEW_DIRECTION = {
+    FIND_NEW_DIRECTION: {
         'speed': 40.0,  // how fast do we rotate?
         'pause_duration': 10, // how many controller ticks do we stay still?
         'move_duration': 10, // how many controller ticks do we rotate?
