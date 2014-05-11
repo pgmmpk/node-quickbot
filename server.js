@@ -18,11 +18,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* API */
 app.post('/api/quickbot/speed', function(req, res) {
+    console.log('set speed:', req.body);
     robot.setSpeed(req.body.speed_left, req.body.speed_right);
     res.json({status: "OK"});
 });
 
 app.get('/api/quickbot/speed', function(req, res) {
+    console.log('get speed');
     res.json(robot.speed());
 });
 
@@ -44,7 +46,8 @@ app.get('/api/quickbot/ir_raw', function(req, res) {
 });
 
 app.post('/api/quickbot/motors/run', function(req, res) {
-    robot.motors().run(req.body.pwm_left, req.body.pwm_right);
+    console.log('motors.run:', req.body);
+    robot.setSpeed(req.body.pwm_left, req.body.pwm_right);
     res.json({status: "OK"});
 });
 

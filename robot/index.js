@@ -16,23 +16,9 @@ require('./qb')(config, function(err, qb_) {
     setInterval(qb.onTimer, 10);
 });
 
-function ensureLoaded() {
-    if (qb === undefined) {
-        throw new Error(status);
-    }
-}
-
 module.exports.setSpeed = function(speed_left, speed_right) {
     console.log('setSpeed:', speed_left, speed_right);
     qb.setSpeed(speed_left, speed_right);
-};
-
-module.exports.speed = function(val) {
-    if (val === undefined) {
-        return qb.getSpeed();
-    } else {
-        qb.setSpeed(val.speed_left, val.speed_right);
-    }
 };
 
 module.exports.ticks = function() {
