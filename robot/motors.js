@@ -1,12 +1,11 @@
-var bs = require('bonescript'),
-    pwmadc = require('pwnadc'),
-    config = require('./config');
+var bs = require('bonescript');
 
 function Motor(pwm_pin, dir1_pin, dir2_pin) {
 
     var speed = 0.0;
 
-    bs.pinMode(pwm_pin, bs.ANALOG_OUTPUT);
+    //bs.pinMode(pwm_pin, bs.ANALOG_OUTPUT);
+    bs.analogWrite(pwm_pin, 0.0, 2000);
     bs.pinMode(dir1_pin, bs.OUTPUT);
     bs.pinMode(dir2_pin, bs.OUTPUT);
 
@@ -34,6 +33,8 @@ function Motor(pwm_pin, dir1_pin, dir2_pin) {
             return motor;
         }
     };
+
+    return motor;
 };
 
 function Motors(config) {
@@ -47,19 +48,12 @@ function Motors(config) {
             motor_right.run(pwm_right);
         },
 
-        close() {
+        close: function() {
             motor_left.close();
             motor_right.close();
         }
     };
 }
-
-
-
-b.pinMode('P8_13', b.OUTPUT);
-bs.analogWrite(pwm_pin, 0.0, 100);
-b.digitalWrite('P8_13', x.value);
-
 
 module.exports = {
     'Motor' : Motor,
