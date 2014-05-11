@@ -22,19 +22,19 @@ function QB(config, callback) {
             bot.stop();
         };
 
-        qb.on_timer = function() {
-            bot.on_timer();
+        qb.onTimer = function() {
+            bot.onTimer();
         };
 
-        qb.set_speed = function(speed_left, speed_right) {
+        qb.setSpeed = function(speed_left, speed_right) {
             bot.run(speed_left, speed_right);
         };
 
-        qb.get_ir = function() {
+        qb.getIr = function() {
             return bot.values();
         };
 
-        qb.get_ir_distances = function() {
+        qb.getIrDistances = function() {
 
             return bot.values().map(function(v, index) {
                 var c = ir_calibration[index];
@@ -43,18 +43,18 @@ function QB(config, callback) {
             });
         };
 
-        qb.get_ticks = function() {
+        qb.getTicks = function() {
             var t = bot.ticks();
             return [t[0] - ticks_origin_left, t[1] - ticks_origin_right];
         };
 
-        qb.reset_ticks = function() {
+        qb.resetTicks = function() {
             var t = bot.ticks();
             ticks_origin_left = t[0];
             ticks_origin_right = t[1];
         };
 
-        qb.get_speed = function() {
+        qb.getSpeed = function() {
             return bot.actual_speed;
         };
 

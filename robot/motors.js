@@ -11,7 +11,9 @@ function Motor(pwm_pin, dir1_pin, dir2_pin) {
     var motor = {
 
         close: function() {
-            bs.analogWrite(pwm_pin, 0.0);
+            bs.digitalWrite(dir1_pin, 0);
+            bs.digitalWrite(dir2_pin, 0);
+            bs.analogWrite(pwm_pin, 0);
         },
 
         run: function(speed) {

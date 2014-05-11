@@ -33,8 +33,8 @@ function Helper(speed_sensor, ticks_sensor, Kp, Ki, integral_limit) {
         helper.reference_speed = speed;
     };
 
-    helper.on_timer = function() {
-        helper.computed_torque = helper.torque = pid(helper.reference_speed - logical_speed);
+    helper.onTimer = function() {
+        helper.computed_torque = helper.torque = pid(helper.reference_speed - helper.speed);
 
         var ticks = ticks_sensor();
         var speed = speed_sensor();
@@ -46,9 +46,9 @@ function Helper(speed_sensor, ticks_sensor, Kp, Ki, integral_limit) {
 
         var old_predicted_speed = predicted_speed;
         predicted_speed += DT * (torque * direction - predicted_speed + ALPHA * (speed - predicted_speed));
-        if (direction !== 0 && (old_predicted_speed * predicted_speed < 0 || (predicted_speed > 0 && predicted_speed < 1)) {
+        if (direction !== 0 && (old_predicted_speed * predicted_speed < 0 || (predicted_speed > 0 && predicted_speed < 1))) {
             direction = 0;
-            logical_speed = 0;
+            helper.speed = 0;
         } else if (direction === 0 && predicted_speed > 1) {
             direction = torque > 0 ? 1 : -1;
         }
@@ -85,13 +85,13 @@ function BotController(config, callback) {
         bot.stop = function() {
             motors.run(0, 0);
             motors.close();
-            sensors.close();
+            sensors.stop();
         };
 
-        bot.on_timer = function() {
+        bot.onTimer = function() {
             sensors.read();
-            left.on_timer();
-            right.on_timer();
+            left.onTimer();
+            right.onTimer();
             motors.run(left.torque, right.torque);
         };
 
@@ -104,7 +104,7 @@ function BotController(config, callback) {
             return [left.ticks, right.ticks];
         };
 
-        bot.actual_speed = function() {
+        bot.actualSpeed = function() {
             return [left.speed, right.speed];
         };
 
