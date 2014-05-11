@@ -45,12 +45,12 @@ function Helper(speed_sensor, ticks_sensor, Kp, Ki, integral_limit) {
         }
 
         var old_predicted_speed = predicted_speed;
-        predicted_speed += DT * (torque * direction - predicted_speed + ALPHA * (speed - predicted_speed));
+        predicted_speed += DT * (helper.torque * direction - predicted_speed + ALPHA * (speed - predicted_speed));
         if (direction !== 0 && (old_predicted_speed * predicted_speed < 0 || (predicted_speed > 0 && predicted_speed < 1))) {
             direction = 0;
             helper.speed = 0;
         } else if (direction === 0 && predicted_speed > 1) {
-            direction = torque > 0 ? 1 : -1;
+            direction = helper.torque > 0 ? 1 : -1;
         }
 
         var delta_ticks = ticks - last_ticks;
@@ -73,8 +73,8 @@ function BotController(config, callback) {
             return callback(err);
         }
 
-        var left = Helper(function() { return sensors.speed_left; }, function() { return sensors.ticks_left; });
-        var right = Helper(function() { return sensors.speed_right; }, function() { return sensors.ticks_right; });
+        var left = Helper(function() { return sensors.speed_left; }, function() { return sensors.enc_ticks_left; });
+        var right = Helper(function() { return sensors.speed_right; }, function() { return sensors.enc_ticks_right; });
 
         var bot = {};
 

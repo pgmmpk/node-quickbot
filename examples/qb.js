@@ -8,11 +8,9 @@ require('../robot/qb')(config, function(err, qb) {
 
     qb.start();
 
-    setInterval(qb.onTimer, 100);
+    setInterval(function() {
+        qb.onTimer();
+    }, 10);
 
-    qb.setSpeed(30, 30);
-
-    setTimeout(function() {
-        qb.stop();
-    }, 2000);
+    qb.setSpeed(40, 0);
 });
