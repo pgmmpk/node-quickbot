@@ -1,17 +1,24 @@
-var config = require('../config'),
-    motors = require('../robot/motors').Motors(config);
+var config = require('../config');
 
-motors.run(60, 0);
-console.log('LEFT motor running forward');
+require('../robot/motors')(config, function(err, motors) {
+    if (err) {
+        return console.log('ERROR:', err);
+    }
 
-setTimeout(function() {
-    motors.run(0, 60);
-    console.log('RIGHT motor running forward');
+    console.log("motors...", motors);
+
+    motors.run(60, 0);
+    console.log('LEFT motor running forward');
 
     setTimeout(function() {
-        motors.close();
-        console.log('All done');
-    }, 2000);
-    
-}, 2000);
+        motors.run(0, 60);
+        console.log('RIGHT motor running forward');
 
+        setTimeout(function() {
+            motors.close();
+            console.log('All done');
+        }, 2000);
+    
+    }, 2000);
+
+});

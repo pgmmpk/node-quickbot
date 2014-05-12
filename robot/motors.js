@@ -9,19 +9,19 @@ function Motor(pwm_pin, dir1_pin, dir2_pin, callback) {
     function writeMotorPins(dir1, dir2, pwm, callback) {
 
         async.parallel([
-        
+	
             bs.digitalWrite.bind(null, dir1_pin, dir1),
         
             bs.digitalWrite.bind(null, dir2_pin, dir2),
         
-            bs.analogWrite.bind(null, pwm_pin, pwm)
+            bs.analogWrite.bind(null, pwm_pin, pwm, undefined)
         
         ].map(function(func) {
 
             return function(cb) {
-            
+
                 func(function(result) {
-                    if (result.err) {
+                    if (result && result.err) {
                         return cb(result.err);
                     }
 
@@ -51,9 +51,9 @@ function Motor(pwm_pin, dir1_pin, dir2_pin, callback) {
 
     async.parallel([
 
-        bs.pinDirection.bind(null, dir1_pin, bs.OUTPUT),
-        bs.pinDirection.bind(null, dir2_pin, bs.OUTPUT),
-        bs.pinDirection.bind(null, pwm_pin, bs.OUTPUT)
+        bs.pinMode.bind(null, dir1_pin, bs.OUTPUT, undefined, undefined, undefined),
+        bs.pinMode.bind(null, dir2_pin, bs.OUTPUT, undefined, undefined, undefined),
+        bs.pinMode.bind(null, pwm_pin, bs.OUTPUT, undefined, undefined, undefined)
 
     ].map(function(func) {
 
@@ -63,7 +63,7 @@ function Motor(pwm_pin, dir1_pin, dir2_pin, callback) {
                     return cb(result.err);
                 }
 
-                cb(null);
+                cb(null, 1);
             });
         };
 
@@ -88,6 +88,7 @@ function Motor(pwm_pin, dir1_pin, dir2_pin, callback) {
  */
 function Motors(config, callback) {
 
+
     async.parallel({
     
         motor_left : Motor.bind(null, config.MOTOR_LEFT.pwm, config.MOTOR_LEFT.dir1, config.MOTOR_LEFT.dir2),
@@ -95,6 +96,7 @@ function Motors(config, callback) {
         motor_right: Motor.bind(null, config.MOTOR_RIGHT.pwm, config.MOTOR_RIGHT.dir1, config.MOTOR_RIGHT.dir2)
     
     }, function(err, result) {
+
 
         if (err) {
             return callback(err);
