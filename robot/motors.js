@@ -1,62 +1,123 @@
-var bs = require('bonescript');
+var bs = require('bonescript'),
+    async = require('async');
 
-function Motor(pwm_pin, dir1_pin, dir2_pin) {
+
+function Motor(pwm_pin, dir1_pin, dir2_pin, callback) {
 
     var speed = 0.0;
 
-    bs.pinMode(pwm_pin, bs.OUTPUT);
-    bs.pinMode(dir1_pin, bs.OUTPUT);
-    bs.pinMode(dir2_pin, bs.OUTPUT);
+    function writeMotorPins(dir1, dir2, pwm, callback) {
+
+        async.parallel([
+        
+            bs.digitalWrite.bind(null, dir1_pin, dir1),
+        
+            bs.digitalWrite.bind(null, dir2_pin, dir2),
+        
+            bs.analogWrite.bind(null, pwm_pin, pwm)
+        
+        ].map(function(func) {
+
+            return function(cb) {
+            
+                func(function(result) {
+                    if (result.err) {
+                        return cb(result.err);
+                    }
+
+                    cb(null);                
+                });
+            };
+        
+        }), callback);
+    }
 
     var motor = {
 
-        close: function() {
-            bs.digitalWrite(dir1_pin, 0);
-            bs.digitalWrite(dir2_pin, 0);
-            bs.analogWrite(pwm_pin, 0);
+        close: function(cb) {
+            writeMotorPins(0, 0, 0, cb);
         },
 
-        run: function(speed) {
+        run: function(speed, cb) {
             if (speed > 0) {
-                bs.digitalWrite(dir1_pin, 0);
-                bs.digitalWrite(dir2_pin, 1);
-                bs.analogWrite(pwm_pin, speed > 100.0 ? 1.0 : speed / 100.0);
+                writeMotorPins(0, 1, speed > 100.0 ? 1.0 : speed / 100.0, cb);
             } else if (speed < 0) {
-                bs.digitalWrite(dir1_pin, 1);
-                bs.digitalWrite(dir2_pin, 0);
-                bs.analogWrite(pwm_pin, speed < -100.0 ? 1.0 : -speed / 100.0);
+                writeMotorPins(1, 0, speed < -100.0 ? 1.0 : -speed / 100.0, cb);
             } else {
-                bs.digitalWrite(dir1_pin, 0);
-                bs.digitalWrite(dir2_pin, 0);
-                bs.analogWrite(pwm_pin, 0);
+                writeMotorPins(0, 0, 0);
             }
-
-            return motor;
         }
     };
 
-    return motor;
+    async.parallel([
+
+        bs.pinDirection.bind(null, dir1_pin, bs.OUTPUT),
+        bs.pinDirection.bind(null, dir2_pin, bs.OUTPUT),
+        bs.pinDirection.bind(null, pwm_pin, bs.OUTPUT)
+
+    ].map(function(func) {
+
+        return function(cb) {
+            func(function(result) {
+                if (result.err) {
+                    return cb(result.err);
+                }
+
+                cb(null);
+            });
+        };
+
+    }), function(err) {
+        if (err) {
+            return callback(err);
+        }
+
+        callback(null, motor);
+    });
 };
 
-function Motors(config) {
 
-    var motor_left = Motor(config.MOTOR_LEFT.pwm, config.MOTOR_LEFT.dir1, config.MOTOR_LEFT.dir2);
-    var motor_right = Motor(config.MOTOR_RIGHT.pwm, config.MOTOR_RIGHT.dir1, config.MOTOR_RIGHT.dir2);
+/**
+ * On success, callback is called as:
+ *
+ *      callback(null, motors);
+ *
+ * where "motor" is an object with methods:
+ *  - run(speed_left, speed_right, callback);
+ *  - close(callback);
+ */
+function Motors(config, callback) {
 
-    return {
-        run: function(pwm_left, pwm_right) {
-            motor_left.run(pwm_left);
-            motor_right.run(pwm_right);
-        },
+    async.parallel({
+    
+        motor_left : Motor.bind(null, config.MOTOR_LEFT.pwm, config.MOTOR_LEFT.dir1, config.MOTOR_LEFT.dir2),
+    
+        motor_right: Motor.bind(null, config.MOTOR_RIGHT.pwm, config.MOTOR_RIGHT.dir1, config.MOTOR_RIGHT.dir2)
+    
+    }, function(err, result) {
 
-        close: function() {
-            motor_left.close();
-            motor_right.close();
+        if (err) {
+            return callback(err);
         }
-    };
+
+        callback(null, {
+            run: function(pwm_left, pwm_right, cb) {
+
+                async.parallel([
+                    result.motor_left.run.bind(null, pwm_left),
+                    result.motor_right.run.bind(null, pwm_right)
+                ], cb);
+            },
+
+            close: function(cb) {
+
+                async.parallel([
+                    result.motor_left.close,
+                    result.motor_right.close
+                ], cb);
+            }
+        });
+    });
 }
 
-module.exports = {
-    'Motor' : Motor,
-    'Motors': Motors
-};
+module.exports = Motors;

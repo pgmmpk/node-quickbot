@@ -65,61 +65,67 @@ function Helper(speed_sensor, ticks_sensor, Kp, Ki, integral_limit) {
 
 function BotController(config, callback) {
 
-    var motors = require('./motors').Motors(config);
-
-    require('./sensors')(config, function(err, sensors) {
+    require('./motors')(config, function(err, motors) {
 
         if (err) {
             return callback(err);
         }
 
-        var left = Helper(function() { return sensors.speed_left; }, function() { return sensors.enc_ticks_left; });
-        var right = Helper(function() { return sensors.speed_right; }, function() { return sensors.enc_ticks_right; });
+        require('./sensors')(config, function(err, sensors) {
 
-        var bot = {};
+            if (err) {
+                return callback(err);
+            }
 
-        bot.start = function() {
-            sensors.start();
-        };
+            var left = Helper(function() { return sensors.speed_left; }, function() { return sensors.enc_ticks_left; });
+            var right = Helper(function() { return sensors.speed_right; }, function() { return sensors.enc_ticks_right; });
 
-        bot.stop = function() {
-            motors.run(0, 0);
-            motors.close();
-            sensors.stop();
-        };
+            var bot = {};
 
-        bot.onTimer = function() {
-            sensors.read();
-            left.onTimer();
-            right.onTimer();
-            motors.run(left.torque, right.torque);
-        };
+            bot.start = function() {
+                sensors.start();
+            };
 
-        bot.run = function(speed_left, speed_right) {
-            left.run(speed_left);
-            right.run(speed_right);
-        };
+            bot.stop = function(cb) {
+                async.parallel([
+                    motors.close,
+                    sensors.stop
+                ], cb);
+            };
 
-        bot.ticks = function() {
-            return [left.ticks, right.ticks];
-        };
+            bot.onTimer = function(cb) {
+                sensors.read();
+                left.onTimer();
+                right.onTimer();
+                motors.run(left.torque, right.torque, cb);
+            };
 
-        bot.actualSpeed = function() {
-            return [left.speed, right.speed];
-        };
+            bot.run = function(speed_left, speed_right) {
+                left.run(speed_left);
+                right.run(speed_right);
+            };
 
-        bot.timer = function() {
-            return sensors.timer;
-        };
+            bot.ticks = function() {
+                return [left.ticks, right.ticks];
+            };
 
-        bot.values = function() {
-            return sensor.values();
-        };
+            bot.actualSpeed = function() {
+                return [left.speed, right.speed];
+            };
 
-        bot.motors = motors;
-        bot.sensors = sensors;
+            bot.timer = function() {
+                return sensors.timer;
+            };
 
-        callback(null, bot);
+            bot.values = function() {
+                return sensor.values();
+            };
+
+            bot.motors = motors;
+            bot.sensors = sensors;
+
+            callback(null, bot);
+        });
     });
 }
 
