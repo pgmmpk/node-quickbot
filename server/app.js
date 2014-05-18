@@ -6,7 +6,8 @@ var express = require('express'),
     q       = require('q'),
     path    = require('path'),
     motors  = require('./routes/motors'),
-    adc     = require('./routes/adc');
+    adc     = require('./routes/adc')
+    qbapi   = require('node-quickbot-api');
 
 // all environments
 app.set('port', 3005);
@@ -73,7 +74,9 @@ function renderPartial(req, res) {
     res.render('partials/' + req.params.name);
 }
 
-motors(app, {
+motors(app, qbapi);
+/**
+ * {
     motors: function(config, callback) {
         setTimeout(function() {
             callback(null, {
@@ -87,6 +90,7 @@ motors(app, {
         });
     }
 });
+*/
 
 adc(app, function(calback) {
    setTimeout(function() {
