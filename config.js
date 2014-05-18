@@ -9,7 +9,7 @@ module.exports = {
         'pwm' : 'P9_16',
 
         'encoder_pin'      : 0,  // AIN0
-        'encoder_threshold': 3000,  // calibrated!
+        'encoder_threshold': 2500,  // calibrated!
         'encoder_delay'    : 50
     },
 
@@ -29,14 +29,8 @@ module.exports = {
                   // ADC timer runs at about 120000 ticks per second
 
     // IR sensor calibration constants (see fit.py)
-    IR_CALIBRATION: [
-        [36.702127659574444, 3995.4255319148942, 1.085106382978724],
-        [99.732495511669754, 3262.2980251346507, 0.66786355475763237],
-        [-203.41628959275999, 3627.8959276018086, 1.642533936651585],
-        [-99.883802816901323, 3060.5915492957743, 0.58098591549295753],
-        [-224.55972696245738, 4294.4436860068263, 1.3310580204778155],
-    ],
-
+    IR_CALIBRATION: 5555.5,
+    
     // Controller parameters
     GO_STRAIGHT: {
         'speed': 40.0,  // how fast do we go?

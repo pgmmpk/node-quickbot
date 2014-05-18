@@ -36,10 +36,8 @@ function QB(config, callback) {
 
         qb.getIrDistances = function() {
 
-            return bot.values().map(function(v, index) {
-                var c = ir_calibration[index];
-
-                return distance(c[0], c[1], c[2], v);
+            return bot.values().map(function(v) {
+                return ir_calibration / v;
             });
         };
 
