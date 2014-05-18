@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 //app.use(express.favicon(__dirname + '/graphics/favicon.ico'));
 app.use(bodyParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 /* API */
 app.post('/api/quickbot/speed', function(req, res) {
@@ -73,17 +73,19 @@ function renderPartial(req, res) {
     res.render('partials/' + req.params.name);
 }
 
-motors(app, function(config, callback) {
-    setTimeout(function() {
-        callback(null, {
-           run: function(torqueLeft, torqueRight) {
-               console.log('MOCK motors.run', torqueLeft, torqueRight);
-           },
-           close: function() {
-               console.log('MOCK motors.close');
-           }
+motors(app, {
+    motors: function(config, callback) {
+        setTimeout(function() {
+            callback(null, {
+               run: function(torqueLeft, torqueRight) {
+                   console.log('MOCK motors.run', torqueLeft, torqueRight);
+               },
+               close: function() {
+                   console.log('MOCK motors.close');
+               }
+            });
         });
-    });
+    }
 });
 
 adc(app, function(calback) {
