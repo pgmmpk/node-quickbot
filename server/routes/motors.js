@@ -1,20 +1,18 @@
-var api = require('quickbot-api');
-
-module.exports = function(app) {
+module.exports = function(app, qbapi) {
 
 	var motors = undefined;
 
-	app.route('/motors/run').post(function(req, res) {
+	app.post('/api/motors/run', function(req, res) {
 		var torqueLeft = +req.body.torqueLeft;
 		var torqueRight = +req.body.torqueRight;
 		
 		if (!motors) {
-			api.motors(api.defaultConfig, function(err, m) {
+			qbapi.motors(qbapi.defaultConfig, function(err, m) {
 				if (err) {
 					console.log("Failed to init motors:", err);
-					return res(500);
+					return res.send(500);
 				}
-				
+
 				motors = m;
 				motors.run(torqueLeft, torqueRight);
 				return res.json({status: 'OK'});
@@ -23,5 +21,9 @@ module.exports = function(app) {
 			motors.run(torqueLeft, torqueRight);
 			return res.json({status: 'OK'});
 		}
+	});
+	
+	app.get('/motors', function(req, res) {
+	    res.render('motors/index');
 	});
 };

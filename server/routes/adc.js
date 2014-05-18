@@ -1,11 +1,9 @@
-var pruadc = require('pru-adc');
-
-module.exports = function(app) {
+module.exports = function(app, pruadc) {
 
     var adc = undefined;
     var running = false;
 
-    app.route('/adc/setup').post(function(req, res) {
+    app.post('/api/adc/setup', function(req, res) {
         if (running) {
             adc.stop();
             adc = undefined;
@@ -15,7 +13,7 @@ module.exports = function(app) {
             pruadc(function(err, a) {
                 if (err) {
                     console.log('ERROR:', err);
-                    return res(500);
+                    return res.send(500);
                 }
                 
                 adc = a;
@@ -59,15 +57,15 @@ module.exports = function(app) {
         }
     });
 
-    app.route('/adc/start').post(function(req, res) {
+    app.post('/api/adc/start', function(req, res) {
         if (running) {
             console.log('ERROR: adc alreay running, stop it first');
-            return res(500);
+            return res.send(500);
         }
         
         if (!adc) {
             console.log('ERROR: adc not there, you must setup it first');
-            return res(500);
+            return res.send(500);
         }
         
         running = true;
@@ -76,7 +74,7 @@ module.exports = function(app) {
         return res.json({status: 'OK'});
     });
     
-    app.route('/adc/stop').post(function(req, res) {
+    app.post('/api/adc/stop', function(req, res) {
         if (adc) {
             adc.stop();
             running = false;
@@ -86,16 +84,11 @@ module.exports = function(app) {
         return res.json({status: 'OK'});
     });
     
-    function requireRunning(req, res, next) {
+    app.get('/api/adc/read', function(req, res) {
         if (!running) {
             console.log('ERROR: adc not running');
-            return res(500);
+            return res.send(500);
         }
-        
-        next();
-    }
-
-    app.route('/adc/read').all(requireRunning).get(function(req, res) {
         return res.json({
             encoder0Values: adc.encoder0Values(),
             encoder1Values: adc.encoder1Values(),

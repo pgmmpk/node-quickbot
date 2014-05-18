@@ -1,19 +1,19 @@
 var express = require('express'), 
+    bodyParser = require('body-parser'),
     app     = express(), 
     http    = require('http'), 
     server  = http.createServer(app), 
     q       = require('q'),
     path    = require('path'),
-    robot   = require('./robot/index'),
-    config  = require('./config');
+    motors  = require('./routes/motors'),
+    adc     = require('./routes/adc');
 
 // all environments
-app.set('port', config.PORT);
+app.set('port', 3005);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 //app.use(express.favicon(__dirname + '/graphics/favicon.ico'));
-app.use(express.json());
-app.use(app.router);
+app.use(bodyParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 /* API */
@@ -65,12 +65,90 @@ app.get('/research', renderIndex);
 app.get('/partials/:name', renderPartial);
 
 function renderIndex(req, res) {
+    console.log('rendering index');
     res.render('index');
 }
 
 function renderPartial(req, res) {
     res.render('partials/' + req.params.name);
 }
+
+motors(app, function(config, callback) {
+    setTimeout(function() {
+        callback(null, {
+           run: function(torqueLeft, torqueRight) {
+               console.log('MOCK motors.run', torqueLeft, torqueRight);
+           },
+           close: function() {
+               console.log('MOCK motors.close');
+           }
+        });
+    });
+});
+
+adc(app, function(calback) {
+   setTimeout(function() {
+       var timer = 0;
+       callback(null, {
+           encoder0Pin: function(pin) {
+               console.log('MOCK adc.encoder0Pin', pin);
+           },
+           encoder1Pin: function(pin) {
+               console.log('MOCK adc.encoder1Pin', pin);
+           },
+           encoder0Threshold: function(threshold) {
+               console.log('MOCK adc.encoder0Threshold', threshold);
+           },
+           encoder1Threshold: function(pin) {
+               console.log('MOCK adc.encoder1Threshold', threshold);
+           },
+           encoder0Delay: function(delay) {
+               console.log('MOCK adc.encoder0Pin', delay);
+           },
+           encoder1Delay: function(delay) {
+               console.log('MOCK adc.encoder1Pin', delay);
+           },
+           start: function() {
+               console.log('MOCK adc.start');
+               timer = 0;
+           },
+           stop: function() {
+               console.log('MOCK adc.stop');
+           },
+           values: function() {
+               console.log('MOCK adc.values');
+               return [0, 1, 2, 3, 4, 5, 6, 7];
+           },
+           encoder0Values: function() {
+               console.log('MOCK adc.encoder0Values');
+               return [1, 2, 3, 4, 5];
+           },
+           encoder1Values: function() {
+               console.log('MOCK adc.encoder1Values');
+               return [1, 2, 3, 4, 5];
+           },
+           encoder0Ticks: function() {
+               console.log('MOCK adc.encoder0Ticks');
+               return 123;
+           },
+           encoder1Ticks: function() {
+               console.log('MOCK adc.encoder1Ticks');
+               return 345;
+           },
+           encoder0Speed: function() {
+               console.log('MOCK adc.encoder0Speed');
+               return 0.6;
+           },
+           encoder1Speed: function() {
+               console.log('MOCK adc.encoder1Speed');
+               return 0.5;
+           },
+           timer: function() {
+               return ++timer;
+           }
+       });
+   });
+});
 
 server.listen(app.get('port'), function() {
     console.log('Express server listening on port ' + app.get('port'));
