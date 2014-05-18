@@ -9,6 +9,7 @@
   },
   "private": true,
   "dependencies": {
+    "quickbot-api": "~0.0.1",
     "express": "~3.6.0",
     "jade": "*",
     "q": "*",
