@@ -7,7 +7,7 @@ var express = require('express'),
     path    = require('path'),
     motors  = require('./routes/motors'),
     adc     = require('./routes/adc')
-    qbapi   = require('node-quickbot-api');
+    qbapi   = require('quickbot-api');
 
 // all environments
 app.set('port', 3005);
