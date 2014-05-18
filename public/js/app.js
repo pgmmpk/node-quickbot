@@ -1,7 +1,7 @@
 (function(angular){
     'use strict';
 
-    var module = angular.module('quickbot', ['ngRoute']);
+    var module = angular.module('quickbot', ['ui.router']);
 
     module.config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
         

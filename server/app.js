@@ -74,6 +74,13 @@ function renderPartial(req, res) {
     res.render('partials/' + req.params.name);
 }
 
+fs.readdirSync(path.join(__dirname, '../packages')).forEach(function(pkg) {
+    console.log(pkg);
+    var pkgServerPath = path.join(__dirname, '../packages', pkg, 'server');
+    var routes = require('../pacakges/' + pkg + '/server/routes');
+    routes(injector);
+});
+
 motors(app, qbapi);
 /**
  * {
