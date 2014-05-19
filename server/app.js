@@ -6,8 +6,9 @@ var express = require('express'),
     q       = require('q'),
     path    = require('path'),
     motors  = require('./routes/motors'),
-    adc     = require('./routes/adc')
-    qbapi   = require('quickbot-api');
+    adc     = require('./routes/adc'),
+    fs = require('fs'),
+    injector= require('./injector');
 
 // all environments
 app.set('port', 3005);
@@ -74,14 +75,22 @@ function renderPartial(req, res) {
     res.render('partials/' + req.params.name);
 }
 
-fs.readdirSync(path.join(__dirname, '../packages')).forEach(function(pkg) {
-    console.log(pkg);
-    var pkgServerPath = path.join(__dirname, '../packages', pkg, 'server');
-    var routes = require('../pacakges/' + pkg + '/server/routes');
-    routes(injector);
+injector.constant('mean.app', app);
+
+injector.constant('qbapi', {
+    motors: function() {
+        console.log('motors called');
+    }
 });
 
-motors(app, qbapi);
+fs.readdirSync(path.join(__dirname, '../packages')).forEach(function(pkg) {
+    console.log(pkg);
+    var pkgPath = path.join(__dirname, '../packages', pkg);
+    var pkgFactory = require('../packages/' + pkg + '/server/routes');
+    injector.inject(pkgFactory);
+    app.use('/' + pkg, express.static(path.join(__dirname, '../packages/' + pkg + '/public')));
+});
+
 /**
  * {
     motors: function(config, callback) {

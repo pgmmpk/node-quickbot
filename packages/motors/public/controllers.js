@@ -1,6 +1,6 @@
 (function(angular) {
 
-    var module = angular.module('quickbot.motors', []);
+    var module = angular.module('motors', ['ui.router']);
 
     module.controller('MotorsCtrl', ['$scope', '$http', function($scope, $http) {
 

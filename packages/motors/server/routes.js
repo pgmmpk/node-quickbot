@@ -1,4 +1,4 @@
-module.exports = function(app, qbapi) {
+module.exports = ['mean.app', 'qbapi', function(app, qbapi) {
 
     var motors = undefined;
 
@@ -23,8 +23,5 @@ module.exports = function(app, qbapi) {
                 return res.json({status: 'OK'});
             }
         });
-    
-    app.route('/motors').get(function(req, res) {
-        res.render('motors/index');
-    });
-};
+
+}];
