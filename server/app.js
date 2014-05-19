@@ -5,7 +5,6 @@ var express = require('express'),
     server  = http.createServer(app), 
     q       = require('q'),
     path    = require('path'),
-    motors  = require('./routes/motors'),
     adc     = require('./routes/adc'),
     fs = require('fs'),
     injector= require('./injector');
