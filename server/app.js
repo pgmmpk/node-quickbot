@@ -76,11 +76,15 @@ function renderPartial(req, res) {
 
 injector.constant('mean.app', app);
 
+/*
 injector.constant('qbapi', {
     motors: function() {
         console.log('motors called');
     }
 });
+*/
+
+injector.constant('qbapi', require('quickbot-api'));
 
 fs.readdirSync(path.join(__dirname, '../packages')).forEach(function(pkg) {
     console.log(pkg);
