@@ -1,11 +1,12 @@
-var path = require('path');
+var path = require('path'),
+    express = require('express');
 
 module.exports = function(mean) {
 
     mean.app.route('/motors').get(mean.renderHome);
 
-    mean.static('/motors/public', path.join(__dirname, '/public'));
-    
+    mean.app.use('/motors/public', express.static(path.join(__dirname, '/public')));
+
     mean.injector.factory('qbapi', [function() {
         var qbapi;
         try {
@@ -21,9 +22,13 @@ module.exports = function(mean) {
 
     mean.injector.inject(routes);
 
-    var aggregate = {
+    mean.aggregate(__dirname, {
         'js': ['public/controllers.js', 'public/routes.js']
-    }
+    });
 
-    mean.aggregate(__dirname, aggregate);
+    mean.resolveAngularModules({
+        'ui-router': '//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js',
+        'pgmmpk-shortcuts': '//pgmmpk.github.io/shortcuts/shortcuts.min.js'
+    });
+
 };

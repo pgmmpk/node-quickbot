@@ -41,9 +41,6 @@ app.route('/modules/aggregated.js').get(function(req, res) {
 var mean = {
     app: app,
     injector: injector,
-    'static': function(prefix, directory) {
-        app.use(prefix, express.static(directory));
-    },
     renderHome: renderIndex,
     aggregate: function(base, aggregation) {
         if (aggregation.js) {
@@ -54,7 +51,8 @@ var mean = {
         if (aggregation.css) {
             _aggregation.css = _aggregation.css.concat(aggregation.css);
         }
-    }
+    },
+    resolveAngularModules: function() {} // FIXME
 };
 
 injector.constant('mean', mean);
