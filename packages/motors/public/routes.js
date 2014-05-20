@@ -4,7 +4,7 @@
 
         $stateProvider.state('motors', {
             url: '/motors',
-            templateUrl: '/motors/index.html',
+            templateUrl: '/motors/public/index.html',
             controller: 'MotorsCtrl'
         });
     }]);

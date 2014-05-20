@@ -15,66 +15,38 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 //app.use(express.favicon(__dirname + '/graphics/favicon.ico'));
 app.use(bodyParser());
+
+var mean = {
+    app: app,
+    injector: injector,
+    'static': function(prefix, directory) {
+        app.use(prefix, express.static(directory));
+    },
+    renderHome: renderIndex
+};
+
+injector.constant('mean', mean);
+
+
 app.use(express.static(path.join(__dirname, '../public')));
 
 /* API */
-app.post('/api/quickbot/speed', function(req, res) {
-    console.log('set speed:', req.body);
-    robot.setSpeed(req.body.speed_left, req.body.speed_right);
-    res.json({status: "OK"});
-});
-
-app.get('/api/quickbot/speed', function(req, res) {
-    console.log('get speed');
-    res.json(robot.speed());
-});
-
-app.get('/api/quickbot/ticks', function(req, res) {
-    res.json(robot.ticks());
-});
-
-app.delete('/api/quickbot/ticks', function(req, res) {
-    robot.reset_ticks();
-    res.json({status: "OK"});
-});
-
-app.get('/api/quickbot/ir_distance', function(req, res) {
-    res.json(robot.ir_distance());
-});
-
-app.get('/api/quickbot/ir_raw', function(req, res) {
-    res.json(robot.ir_raw());
-});
-
-app.post('/api/quickbot/motors/run', function(req, res) {
-    console.log('motors.run:', req.body);
-    robot.setSpeed(req.body.pwm_left, req.body.pwm_right);
-    res.json({status: "OK"});
-});
-
-app.get('/api/quickbot/sensors/encoder0_values', function(req, res) {
-    res.json(robot.sensors().adc.encoder0Values());
-});
-
-app.get('/api/quickbot/sensors/encoder1_values', function(req, res) {
-    res.json(robot.sensors().adc.encoder1Values());
-});
 
 app.get('/', renderIndex);
 app.get('/tools', renderIndex);
-app.get('/research', renderIndex);
-app.get('/partials/:name', renderPartial);
 
 function renderIndex(req, res) {
     console.log('rendering index');
     res.render('index');
 }
 
-function renderPartial(req, res) {
-    res.render('partials/' + req.params.name);
-}
-
 injector.constant('mean.app', app);
+
+// bootstrap packages
+fs.readdirSync(path.join(__dirname, '../packages')).forEach(function(pkg) {
+    console.log(pkg);
+    require('../packages/' + pkg)(mean);
+});
 
 /*
 injector.constant('qbapi', {
@@ -84,15 +56,6 @@ injector.constant('qbapi', {
 });
 */
 
-injector.constant('qbapi', require('quickbot-api'));
-
-fs.readdirSync(path.join(__dirname, '../packages')).forEach(function(pkg) {
-    console.log(pkg);
-    var pkgPath = path.join(__dirname, '../packages', pkg);
-    var pkgFactory = require('../packages/' + pkg + '/server/routes');
-    injector.inject(pkgFactory);
-    app.use('/' + pkg, express.static(path.join(__dirname, '../packages/' + pkg + '/public')));
-});
 
 /**
  * {

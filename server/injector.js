@@ -37,13 +37,14 @@ module.exports.inject = function(params) {
 function instantiate(names) {
 
     var toresolve = {};
+    var numToResolve = 0;
     (function collectDeps(names){
         
         names.forEach(function(name) {
             var ctrl = singletons[name];
 
             if (!ctrl) {
-                throw new Error('Undefined name: "' + name + "'");
+                throw new Error('Undefined name: "' + name + '"');
             }
 
             if (ctrl.inst !== undefined) {
@@ -55,13 +56,13 @@ function instantiate(names) {
             }
 
             toresolve[name] = true;
+            numToResolve += 1;
 
             collectDeps(ctrl.deps);
         });
     })(names);
 
-    var numResolved = toresolve.length;
-    while(numResolved--) {
+    while(--numToResolve >= 0) {
         var ctrl = undefined;
 
         for(var dep in toresolve) {
