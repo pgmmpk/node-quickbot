@@ -21,16 +21,24 @@ var _aggregation = {
     css: []
 };
 
+var _angularDependencies = [];
+
 function finalizeAggregation() {
-    _aggregation._js = _aggregation.js.map(function(path) {
+    var filecontents = _aggregation.js.map(function(path) {
         return fs.readFileSync(path);
-    }).join('\n');
+    });
+
+    var angularDependencies = _angularDependencies.map(function(moduleName) { return "'" + moduleName + "'"; }).join(", ");
+    var template = '(function(angular){ angular.module("ane", [{dependencies}]); })(angular)';
+    filecontents.push(template.replace(/\{dependencies\}/, angularDependencies));
+
+    _aggregation._js = filecontents.join('\n');
     _aggregation._css = _aggregation.css.map(function(path) {
         return fs.readFileSync(path);
     }).join('\n');
 }
 
-app.route('/modules/aggregated.js').get(function(req, res) {
+app.route('/ane/modules-aggregated.js').get(function(req, res) {
     if (!_aggregation._js) {
         finalizeAggregation();
     }
@@ -52,12 +60,15 @@ var mean = {
             _aggregation.css = _aggregation.css.concat(aggregation.css);
         }
     },
+    angularDependencies: function() {
+        for(var i = 0; i < arguments.length; i++) {
+            _angularDependencies.push(arguments[i]);
+        }
+    },
     resolveAngularModules: function() {} // FIXME
 };
 
 injector.constant('mean', mean);
-
-app.use(express.static(path.join(__dirname, '../public')));
 
 /* API */
 

@@ -1,25 +1,16 @@
 doctype html
-html(ng-app='quickbot')
+html(ng-app='ane')
     head
         title QuickBot API and Control
         meta(charset='utf-8')
         base(href='/')
-        link(rel='stylesheet', href='/stylesheets/style.css')
+
         link(href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css", rel="stylesheet")
         link(href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css", rel="stylesheet")
-        script(src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js")
-        script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js")
-        script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js')
+        script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js')
         script(src='//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js')
-        script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-animate.min.js')
-        script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-touch.min.js')
-        //script(src="//cdnjs.cloudflare.com/ajax/libs/d3/3.3.10/d3.min.js")
 
-        script(src='/modules/aggregated.js')
-
-        script(src='js/app.js')
-        script(src='js/services.js')
-        script(src='js/controllers.js')
+        script(src='ane/modules-aggregated.js')
 
     body
         .navbar.navbar-default(role='navigation')
@@ -30,8 +21,6 @@ html(ng-app='quickbot')
                 ul.nav.navbar-nav
                     li(ng-class='{"active": location == ""}')
                         a(href='/')
-                    li(ng-class='{"active": location == "tools"}')
-                        a(ui-sref='tools') Tools
                     li(ng-class='{"active": location == "motors"}')
                         a(ui-sref='motors') Motors Demo
 

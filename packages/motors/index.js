@@ -25,6 +25,8 @@ module.exports = function(mean) {
     mean.aggregate(__dirname, {
         'js': ['public/controllers.js', 'public/routes.js']
     });
+    
+    mean.angularDependencies('motors');
 
     mean.resolveAngularModules({
         'ui-router': '//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js',
