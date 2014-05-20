@@ -16,17 +16,48 @@ app.set('view engine', 'jade');
 //app.use(express.favicon(__dirname + '/graphics/favicon.ico'));
 app.use(bodyParser());
 
+var _aggregation = {
+    js: [],
+    css: []
+};
+
+function finalizeAggregation() {
+    _aggregation._js = _aggregation.js.map(function(path) {
+        return fs.readFileSync(path);
+    }).join('\n');
+    _aggregation._css = _aggregation.css.map(function(path) {
+        return fs.readFileSync(path);
+    }).join('\n');
+}
+
+app.route('/modules/aggregated.js').get(function(req, res) {
+    if (!_aggregation._js) {
+        finalizeAggregation();
+    }
+    res.setHeader('Content-type', 'application/javascript');
+    res.send(_aggregation._js);
+});
+
 var mean = {
     app: app,
     injector: injector,
     'static': function(prefix, directory) {
         app.use(prefix, express.static(directory));
     },
-    renderHome: renderIndex
+    renderHome: renderIndex,
+    aggregate: function(base, aggregation) {
+        if (aggregation.js) {
+            _aggregation.js = _aggregation.js.concat(aggregation.js.map(function(a) {
+                return path.join(base, a);
+            }));
+        }
+        if (aggregation.css) {
+            _aggregation.css = _aggregation.css.concat(aggregation.css);
+        }
+    }
 };
 
 injector.constant('mean', mean);
-
 
 app.use(express.static(path.join(__dirname, '../public')));
 

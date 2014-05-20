@@ -20,4 +20,10 @@ module.exports = function(mean) {
     var routes = require('./server/routes');
 
     mean.injector.inject(routes);
+
+    var aggregate = {
+        'js': ['public/controllers.js', 'public/routes.js']
+    }
+
+    mean.aggregate(__dirname, aggregate);
 };
