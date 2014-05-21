@@ -3,8 +3,6 @@ var path = require('path'),
 
 module.exports = function(mean) {
 
-    mean.app.route('/motors').get(mean.renderHome);
-
     mean.app.use('/motors/public', express.static(path.join(__dirname, '/public')));
 
     mean.injector.factory('qbapi', [function() {
@@ -21,16 +19,11 @@ module.exports = function(mean) {
     var routes = require('./server/routes');
 
     mean.injector.inject(routes);
-
-    mean.aggregate(__dirname, {
-        'js': ['public/controllers.js', 'public/routes.js']
-    });
     
-    mean.angularDependencies('motors');
-
-    mean.resolveAngularModules({
-        'ui-router': '//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js',
-        'pgmmpk-shortcuts': '//pgmmpk.github.io/shortcuts/shortcuts.min.js'
-    });
+    mean.injector.inject(['mean.pageBuilder', function(pageBuilder) {
+        pageBuilder.aggregateScript(__dirname + '/public/controllers.js');
+        pageBuilder.aggregateScript(__dirname + '/public/routes.js');
+        pageBuilder.addAngularModule('motors');
+    }]);
 
 };

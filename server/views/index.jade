@@ -11,6 +11,8 @@ html(ng-app='ane')
         script(src='//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js')
 
         script(src='ane/modules-aggregated.js')
+        script
+            != '(function(angular){ angular.module("ane", ' + angularModules + '); })(angular);'
 
     body
         .navbar.navbar-default(role='navigation')
