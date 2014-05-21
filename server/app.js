@@ -14,7 +14,7 @@ var pageBuilder = PageBuilder(app);
 
 config(app, pageBuilder);  // configure all modules
 
-app.get('*', pageBuilder);
+app.get('*', pageBuilder);  // catch-all loads home page, convenient for client-side routing in SPA
 
 server.listen(app.get('port'), function() {
     console.log('Express server listening on port ' + app.get('port'));

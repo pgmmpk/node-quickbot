@@ -1,11 +1,10 @@
 var path = require('path'),
-    express = require('express');
+    express = require('express'),
+    routes = require('./server/routes');
 
 module.exports = function(mean) {
 
-    mean.app.use('/motors/public', express.static(path.join(__dirname, '/public')));
-
-    mean.injector.factory('qbapi', [function() {
+    mean.factory('qbapi', [function() {
         var qbapi;
         try {
             qbapi = require('quickbot-api');
@@ -15,12 +14,14 @@ module.exports = function(mean) {
         }
         return qbapi;
     }]);
-
-    var routes = require('./server/routes');
-
-    mean.injector.inject(routes);
     
-    mean.injector.inject(['mean.pageBuilder', function(pageBuilder) {
+    mean.run(['mean.app', function(app) {
+        app.use('/motors/public', express.static(path.join(__dirname, '/public')));
+    }]);
+
+    routes(mean);
+
+    mean.run(['mean.pageBuilder', function(pageBuilder) {
         pageBuilder.aggregateScript(__dirname + '/public/controllers.js');
         pageBuilder.aggregateScript(__dirname + '/public/routes.js');
         pageBuilder.addAngularModule('motors');
