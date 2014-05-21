@@ -3,18 +3,10 @@ module.exports = function (grunt) {
     var initConfig;
 
     // Loading external tasks
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
-    grunt.loadNpmTasks('grunt-mocha');
-    grunt.loadNpmTasks('grunt-ngdocs');
-    grunt.loadNpmTasks('grunt-mocha-test');
+    require('load-grunt-tasks')(grunt);
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'mochaTest']);
+    grunt.registerTask('default', ['jshint', 'mochaTest', 'nodemon']);
     //grunt.registerTask('default', ['jshint', 'mocha']);
 
     // Project configuration.
@@ -58,6 +50,19 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-        }
+        },
+        nodemon: {
+            dev: {
+                script: 'server/app.js',
+                options: {
+                    args: [],
+                    ignore: ['node_modules/**'],
+                    ext: 'js,jade',
+                    nodeArgs: ['--debug'],
+                    delayTime: 1,
+                    cwd: __dirname
+                }
+            }
+        },
     });
 };
