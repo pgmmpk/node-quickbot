@@ -1,7 +1,7 @@
 doctype html
 html(ng-app='ane')
     head
-        title QuickBot API and Control
+        title= title
         meta(charset='utf-8')
         base(href='/')
 
@@ -17,12 +17,12 @@ html(ng-app='ane')
     body
         .navbar.navbar-default(role='navigation')
             .navbar-header
-                a.navbar-brand(ng-href='/') QuickBot API and Control
+                a.navbar-brand(ng-href='/')= title
 
             .collapse.navbar-collapse
                 ul.nav.navbar-nav
                     li(ng-class='{"active": location == ""}')
-                        a(href='/')
+                        a(href='/') Home
                     li(ng-class='{"active": location == "motors"}')
                         a(ui-sref='motors') Motors Demo
 

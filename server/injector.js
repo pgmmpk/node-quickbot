@@ -104,7 +104,5 @@ module.exports = function() {
         return injector;
     };
     
-    injector.run = injector.inject;  // convenience
-
     return injector;
 };

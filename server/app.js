@@ -4,8 +4,7 @@ var express = require('express'),
     http    = require('http'), 
     server  = http.createServer(app), 
     pageBuilderFactory = require('./page-builder'),
-    injectorFactory = require('./injector'),
-    config = require('./config');
+    injectorFactory = require('./injector');
 
 app.set('port', 3005);
 
@@ -17,8 +16,14 @@ var mean = injectorFactory();
 mean.constant('mean', mean);
 mean.constant('mean.app', app);
 mean.constant('mean.pageBuilder', pageBuilder);
+mean.run = mean.inject;  // convenience
+mean.require = function(name) {
+    mean.factory(name, [function() {
+        return require(name);
+    }]);
+};
 
-config(mean);  // configure all mean modules
+require(process.cwd() + '/bane')(mean);  // configure all mean modules
 
 app.get('*', pageBuilder);  // catch-all loads home page, convenient for client-side routing in SPA
 
