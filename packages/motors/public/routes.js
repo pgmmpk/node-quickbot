@@ -1,6 +1,9 @@
 (function(angular) {
 
-    angular.module('motors').config(['$stateProvider', function($stateProvider){
+    angular.module('motors').config(['$stateProvider', '$locationProvider',
+                                     function($stateProvider, $locationProvider) {
+
+        $locationProvider.html5Mode(true);
 
         $stateProvider.state('motors', {
             url: '/motors',
@@ -10,5 +13,3 @@
     }]);
 
 })(angular);
-
-// states for my app
