@@ -28,7 +28,7 @@ module.exports = function (grunt) {
         clean: {
         },
         jshint: {
-            files:['public/components/**/*.js', '*.js', 'test/**/*Spec.js', 'demo/**/*.js'],
+            files:['server/**/*.js', 'test/**/*Spec.js'],
             options: {
                 curly   : true,
                 eqeqeq  : true,

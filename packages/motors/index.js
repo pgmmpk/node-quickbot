@@ -14,7 +14,7 @@ module.exports = function(mean) {
         }
         return qbapi;
     }]);
-    
+
     mean.run(['mean.app', function(app) {
         app.use('/motors/public', express.static(path.join(__dirname, '/public')));
     }]);
@@ -22,9 +22,9 @@ module.exports = function(mean) {
     routes(mean);
 
     mean.run(['mean.pageBuilder', function(pageBuilder) {
+        pageBuilder.addAngularModule('motors');
         pageBuilder.aggregateScript(__dirname + '/public/controllers.js');
         pageBuilder.aggregateScript(__dirname + '/public/routes.js');
-        pageBuilder.addAngularModule('motors');
     }]);
 
 };

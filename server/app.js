@@ -3,7 +3,7 @@ var express = require('express'),
     app     = express(), 
     http    = require('http'), 
     server  = http.createServer(app), 
-    PageBuilder = require('./page-builder'),
+    pageBuilderFactory = require('./page-builder'),
     injector = require('./injector'),
     config = require('./config');
 
@@ -11,7 +11,7 @@ app.set('port', 3005);
 
 app.use(bodyParser());
 
-var pageBuilder = PageBuilder(app);
+var pageBuilder = pageBuilderFactory(app);
 
 var mean = {
     run: function(injectable) {

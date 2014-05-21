@@ -5,7 +5,7 @@ var toAggregate = {
     seen: {}
 };
 
-var aggregated = undefined;
+var aggregated;
 
 var angularModules = [];
 
@@ -39,46 +39,3 @@ var pageBuilder = {
         angularModules.push(moduleName);
     }
 };
-
-var mean = {
-    routes: {},
-    injector: 
-};
-
-mean.routes.aggregatedJs = express.Route().get('/ane/modules-aggregated.js', function(req, res) {
-    if (aggregated === undefined) {
-        finalizeAggregation();
-    }
-    res.setHeader('Content-type', 'application/javascript');
-    res.send(aggregated);
-});
-
-mean.routes.index = express.Route().get('/', mean.renderIndex);
-
-var nea = {
-
-    injector: injector,
-
-    renderHome: renderIndex,
-
-    aggregate: function(base, aggregation) {
-        if (aggregation.js) {
-            _aggregation.js = _aggregation.js.concat(aggregation.js.map(function(a) {
-                return path.join(base, a);
-            }));
-        }
-        if (aggregation.css) {
-            _aggregation.css = _aggregation.css.concat(aggregation.css);
-        }
-    },
-    
-    angularDependencies: function() {
-        for(var i = 0; i < arguments.length; i++) {
-            _angularDependencies.push(arguments[i]);
-        }
-    }
-};
-
-injector.constant('mean', mean);
-
-app.get('/', renderIndex);
