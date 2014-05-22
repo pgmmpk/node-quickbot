@@ -9,6 +9,8 @@ html(ng-app='ane')
         link(href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css", rel="stylesheet")
         script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js')
         script(src='//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js')
+        each s in scripts
+            script(src=s)
 
         script(src='ane/modules-aggregated.js')
         script
@@ -21,9 +23,8 @@ html(ng-app='ane')
 
             .collapse.navbar-collapse
                 ul.nav.navbar-nav
-                    li(ng-class='{"active": location == ""}')
-                        a(href='/') Home
-                    li(ng-class='{"active": location == "motors"}')
-                        a(ui-sref='motors') Motors Demo
+                    each menu in menus
+                        li(ui-route=menu.link, ng-class="{active: $uiRoute}")
+                            a(ui-sref=menu.link)= menu.title
 
         .container(ui-view)

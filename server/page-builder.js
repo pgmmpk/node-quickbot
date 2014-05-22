@@ -9,6 +9,14 @@ module.exports = function(app) {
     var scripts = [];
     var filesToAggregate = [];
     var angularModules = [];
+    var navBarTemplate;
+    var vars = {
+        title: 'MEAN APE',
+        scripts: [],
+        angularModules: [],
+        menus: [],
+        pretty: true
+    };
 
     app.get('/ane/modules-aggregated.js', function(req, res) {
         
@@ -22,12 +30,8 @@ module.exports = function(app) {
 
     var pageBuilder = function(req, res) {
         if (page === undefined) {
-            page = jade.renderFile(__dirname + '/views/index.jade', {
-                pretty: true,
-                title: pageTitle,
-                scripts: scripts,
-                angularModules: JSON.stringify(angularModules)
-            });
+            vars.angularModules = JSON.stringify(vars.angularModules);
+            page = jade.renderFile(__dirname + '/views/index.jade', vars);
         }
 
         res.setHeader('Content-type', 'text/html');
@@ -36,9 +40,9 @@ module.exports = function(app) {
     
     pageBuilder.title = function(value) {
         if (value === undefined) {
-            return pageTitle;
+            return vars.title;
         } else {
-            pageTitle = value;
+            vars.title = value;
             return pageBuilder;
         }
     };
@@ -71,7 +75,15 @@ module.exports = function(app) {
         if (page !== undefined) {
             throw new Error('Page was already finalized');
         }
-        angularModules.push(moduleName);
+        vars.angularModules.push(moduleName);
+        return pageBuilder;
+    };
+
+    pageBuilder.addMenu = function(menu) {
+        if (page !== undefined) {
+            throw new Error('Page was already finalized');
+        }
+        vars.menus.push(menu);
         return pageBuilder;
     };
 

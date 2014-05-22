@@ -56,17 +56,17 @@ module.exports = function() {
         })(names);
 
         function nameUnresolved(name) {
-            return singletons[nme].inst === undefined;
+            return singletons[name].inst === undefined;
         }
         
         function instanceByName(name) {
             return singletons[name].inst;
         }
         
-        while(--numToResolve >= 0) {
+        while (--numToResolve >= 0) {
             var ctrl;
 
-            for(var dep in toresolve) {
+            for (var dep in toresolve) {
                 var c = singletons[dep];
                 
                 if (c.deps.filter(nameUnresolved).length === 0) {

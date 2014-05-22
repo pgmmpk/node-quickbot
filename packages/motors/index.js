@@ -25,6 +25,9 @@ module.exports = function(mean) {
         pageBuilder.addAngularModule('motors');
         pageBuilder.aggregateScript(__dirname + '/public/controllers.js');
         pageBuilder.aggregateScript(__dirname + '/public/routes.js');
+        //pageBuilder.addScriptUrl('//jopa');
+        
+        pageBuilder.addMenu({link: 'motors', title: 'Motors'});
     }]);
 
 };
