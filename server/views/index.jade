@@ -14,7 +14,12 @@ html(ng-app='ane')
 
         script(src='ane/modules-aggregated.js')
         script
-            != '(function(angular){ angular.module("ane", ' + angularModules + '); })(angular);'
+            != '(function(angular){ var module = angular.module("ane", ' + angularModules + ');\n'
+            != 'module.config(["$stateProvider", "$locationProvider", function($stateProvider, $locationProvider) {\n'
+            !=     '$locationProvider.html5Mode(true);\n'
+            !=     '$stateProvider.state("home", { url: "/"});\n'
+            != '}]\n);'
+            != '})(angular);'
 
     body
         .navbar.navbar-default(role='navigation')

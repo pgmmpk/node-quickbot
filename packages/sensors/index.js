@@ -5,16 +5,16 @@ var path = require('path'),
 module.exports = function(mean) {
 
     mean.run(['mean.app', function(app) {
-        app.use('/motors/public', express.static(path.join(__dirname, '/public')));
+        app.use('/sensors/public', express.static(path.join(__dirname, '/public')));
     }]);
 
     routes(mean);
 
     mean.run(['mean.pageBuilder', function(pageBuilder) {
-        pageBuilder.addAngularModule('motors');
+        pageBuilder.addAngularModule('sensors');
         pageBuilder.aggregateScript(__dirname + '/public/app.js');
         
-        pageBuilder.addMenu({link: 'motors', title: 'Motors'});
+        pageBuilder.addMenu({link: 'sensors', title: 'Sensors'});
     }]);
 
 };

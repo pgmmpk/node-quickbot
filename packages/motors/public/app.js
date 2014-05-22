@@ -15,4 +15,12 @@
         };
     }]);
 
+    module.config(['$stateProvider', function($stateProvider, $locationProvider) {
+        $stateProvider.state('motors', {
+            url: '/motors',
+            templateUrl: '/motors/public/index.html',
+            controller: 'MotorsCtrl'
+        });
+    }]);
+
 })(angular);
