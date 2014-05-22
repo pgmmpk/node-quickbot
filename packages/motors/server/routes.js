@@ -1,5 +1,5 @@
 module.exports = function(mean) {
-    
+
     mean.run(['mean.app', 'qbapi', function(app, qbapi) {
         var motors = undefined;
     

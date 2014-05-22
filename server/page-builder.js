@@ -5,11 +5,7 @@ module.exports = function(app) {
 
     var page;
     var aggregatedJs;
-    var pageTitle = 'MEAN APE';
-    var scripts = [];
     var filesToAggregate = [];
-    var angularModules = [];
-    var navBarTemplate;
     var vars = {
         title: 'MEAN APE',
         scripts: [],
@@ -51,7 +47,7 @@ module.exports = function(app) {
         if (page !== undefined) {
             throw new Error('Page is already finalized');
         }
-        scripts.push(url);
+        vars.scripts.push(url);
         return pageBuilder;
     };
 

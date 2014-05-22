@@ -2,16 +2,40 @@
 
     var module = angular.module('sensors', ['ui.router']);
 
-    module.controller('SensorsCtrl', ['$scope', '$http', function($scope, $http) {
+    module.controller('SensorsCtrl', ['$scope', 'socket', function($scope, socket) {
+        
+        socket.on('heartbeat', function(data) {
+            console.log('heartbeat:', data.heartbeat);
+        });
 
-        $scope.torqueLeft = 0;
-        $scope.torqueRight = 0;
-
-        $scope.run = function() {
-            $http.post('/api/sensors/read', {
-                torqueLeft: $scope.torqueLeft,
-                torqueRight: $scope.torqueRight
-            });
+        $scope.ping = function() {
+            console.log('sending Hello')
+            socket.emit('ping', {ping: 'Privet'});
+        }
+    }]);
+    
+    module.factory('socket', ['$rootScope', function ($rootScope) {
+        var socket = io.connect();
+        return {
+            on: function (eventName, callback) {
+                socket.on(eventName, function () {  
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        callback.apply(socket, args);
+                    });
+                });
+            },
+          
+            emit: function (eventName, data, callback) {
+                socket.emit(eventName, data, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        if (callback) {
+                            callback.apply(socket, args);
+                        }
+                    });
+                });
+            }
         };
     }]);
 

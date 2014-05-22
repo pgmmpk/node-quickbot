@@ -11,6 +11,8 @@ module.exports = function(mean) {
         }
         return qbapi;
     }]);
+    
+    require('./packages/socketio')(mean);
 
     // bootstrap packages
     require('./packages/motors')(mean);

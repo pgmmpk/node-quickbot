@@ -15,6 +15,7 @@ var pageBuilder = pageBuilderFactory(app);
 var mean = injectorFactory();
 mean.constant('mean', mean);
 mean.constant('mean.app', app);
+mean.constant('mean.server', server);
 mean.constant('mean.pageBuilder', pageBuilder);
 mean.run = mean.inject;  // convenience
 mean.require = function(name) {
