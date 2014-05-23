@@ -35,14 +35,19 @@ module.exports = function(mean) {
         });
 
         app.get('/api/sensors/read', function(req, res) {
-            res.send({
-                timer: sensors.timer,
-                ticksLeft: sensors.ticksLeft,
-                ticksRight: sensors.ticksRight,
-                speedLeft: sensors.speedLeft,
-                speedRight: sensors.speedRight,
-                values: sensors.values
-            });
+            if (sensors === undefined) {
+                res.send({status: 'Not ready yet'});
+            } else{
+                res.send({
+                    timer: sensors.timer,
+                    ticksLeft: sensors.ticksLeft,
+                    ticksRight: sensors.ticksRight,
+                    speedLeft: sensors.speedLeft,
+                    speedRight: sensors.speedRight,
+                    values: sensors.values,
+                    status: 'OK'
+                });
+            }
         });
     }]);
 
