@@ -8,13 +8,20 @@
         $http.post('/api/sensors/start');
         
         var timer = $interval(function() {
-            $http.get('/api/sensors/read').success(function(sensors) {
-                $scope.timer = sensors.timer;
-                $scope.ticksLeft = sensors.ticksLeft;
-                $scope.ticksRight = sensors.ticksRight;
-                $scope.speedLeft = sensors.speedLeft;
-                $scope.speedRight = sensors.speedRight;
-                $scope.values = sensors.values;
+            $http.get('/api/sensors/read').then(function(sensors) {
+                if (sensors.status !== 'OK') {
+                    $scope.status = 'Not ready';
+                } else {
+                    $scope.status = '';
+                    $scope.timer = sensors.timer;
+                    $scope.ticksLeft = sensors.ticksLeft;
+                    $scope.ticksRight = sensors.ticksRight;
+                    $scope.speedLeft = sensors.speedLeft;
+                    $scope.speedRight = sensors.speedRight;
+                    $scope.values = sensors.values;
+                }
+            }, function(err) {
+                $scope.status = 'IO error: ' + err;
             });
         }, 200);
 
