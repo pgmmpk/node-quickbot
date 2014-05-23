@@ -4,24 +4,62 @@ var path = require('path'),
 
 module.exports = function(mean) {
 
-    mean.run(['mean.app', 'sockets', function(app, sockets) {
+    mean.run(['mean.app', 'sockets', 'qbapi', function(app, sockets, qbapi) {
         app.use('/sensors/public', express.static(path.join(__dirname, '/public')));
 
         var timer;
+        var clients = 0;
         var count = 0;
-        
+        var sensors;
+
         sockets.on('connection', function(socket) {
             
             if (timer !== undefined) {
                 socket.emit('You are not the first :(');
             }
             
-            timer = setInterval(function() {
-                socket.emit('heartbeat', {heartbeat: count++});
-            }, 2000);
+            socket.on('eyb', function() {
+                console.log('EYB', clients);
+                if (clients++ === 0) {
+                    qbapi.sensors(qbapi.defaultConfig, function(err, _sensors) {
+                        if (err) {
+                            console.log('ERROR:', err);
+                            return;
+                        }
+                        
+                        sensors = _sensors;
+
+                        sensors.start();
+                        
+                        var throttleCount = 0;
+                        
+                        timer = setInterval(function() {
+                            sensors.read();
+                            throttleCount ++;
+                            if (throttleCount === 10) {
+                                throttleCount = 0;
+                                socket.emit('sensors', {
+                                    timer: sensors.timer,
+                                    ticksLeft: sensors.ticksLeft,
+                                    ticksRight: sensors.ticksRight,
+                                    speedLeft: sensors.speedLeft,
+                                    speedRight: sensors.speedRight,
+                                    values: sensors.values
+                                });
+                            }
+                        }, 10);
+                    });
+                }
+            });
             
-            socket.on('disconnect', function() {
-                clearInterval(timer);
+            socket.on('bye', function() {
+                console.log('BYE');
+                if (--clients === 0) {
+                    sensors.stop();
+                    sensors = undefined;
+                    clearInterval(timer);
+                    timer = undefined;
+                }
             });
             
             socket.on('ping', function(data) {

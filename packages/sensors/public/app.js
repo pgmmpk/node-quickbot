@@ -8,15 +8,27 @@
             console.log('heartbeat:', data.heartbeat);
         });
 
+        socket.on('sensors', function(sensors) {
+            console.log(sensors);
+            $scope.timer = sensors.timer;
+            $scope.ticksLeft = sensors.ticksLeft;
+            $scope.ticksRight = sensors.ticksRight;
+            $scope.speedLeft = sensors.speedLeft;
+            $scope.speedRight = sensors.speedRight;
+            $scope.values = sensors.values;
+        });
+
         $scope.ping = function() {
             console.log('sending Hello')
             socket.emit('ping', {ping: 'Privet'});
         }
     }]);
-    
+
+    var socket;
+
     module.factory('socket', ['$rootScope', function ($rootScope) {
-        var socket = io.connect();
         return {
+            
             on: function (eventName, callback) {
                 socket.on(eventName, function () {  
                     var args = arguments;
@@ -43,7 +55,16 @@
         $stateProvider.state('sensors', {
             url: '/sensors',
             templateUrl: '/sensors/public/index.html',
-            controller: 'SensorsCtrl'
+            controller: 'SensorsCtrl',
+            onEnter: function() {
+                if (socket === undefined) {
+                    socket = io.connect();
+                }
+                socket.emit('eyb');
+            },
+            onExit: function() {
+                socket.emit('bye');
+            }
         });
     }]);
 

@@ -23,7 +23,7 @@ module.exports = {
             timer: 1010,
             ticksLeft: 123,
             ticksRight: 456,
-            speedLEft: 20.2,
+            speedLeft: 20.2,
             speedRight: 22.1,
             values: [25, 56, 54, 78, 50]
         });
