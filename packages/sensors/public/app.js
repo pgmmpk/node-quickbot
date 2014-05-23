@@ -8,8 +8,8 @@
         $http.post('/api/sensors/start');
         
         var timer = $interval(function() {
-            $http.get('/api/sensors/read').then(function(sensors) {
-                console.log(sensors);
+            $http.get('/api/sensors/read').then(function(data) {
+                var sensors = data.data;
                 if (sensors.status !== 'OK') {
                     $scope.status = 'Not ready';
                 } else {
