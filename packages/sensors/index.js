@@ -12,8 +12,8 @@ module.exports = function(mean) {
         var sensors;
         
         app.post('/api/sensors/start', function(req, res) {
-            console.log(qbapi);
             qbapi.sensors(qbapi.defaultConfig, function(err, _sensors) {
+		    console.log("Sensor is READY!", err);
                 if (err) {
                     console.log('ERROR:', err);
                     return res.send(500);
@@ -21,8 +21,9 @@ module.exports = function(mean) {
                 
                 sensors = _sensors;
                 sensors.start();
+		console.log("SENSORS: ", sensors);
                 
-                res.send({status: 'OK'});
+                res.json({status: 'OK'});
             });
         });
 
@@ -31,14 +32,16 @@ module.exports = function(mean) {
                 sensors.stop();
                 sensors = undefined;
             }
-            res.send({status: 'OK'});
+            res.json({status: 'OK'});
         });
 
         app.get('/api/sensors/read', function(req, res) {
             if (sensors === undefined) {
-                res.send({status: 'Not ready yet'});
+                res.json({status: 'Not ready yet'});
+		console.log("?");
             } else{
-                res.send({
+		console.log("!");
+                res.json({
                     timer: sensors.timer,
                     ticksLeft: sensors.ticksLeft,
                     ticksRight: sensors.ticksRight,
