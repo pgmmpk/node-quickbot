@@ -12,11 +12,11 @@ module.exports = function(mean) {
         return qbapi;
     }]);
     
-    //require('./packages/socketio')(mean);
+    require('./packages/socketio')(mean);
 
     // bootstrap packages
     require('./packages/motors')(mean);
-    require('./packages/sensors')(mean);
+    require('./packages/sensors-socketio')(mean);
     require('./packages/adc')(mean);
     
     // configure page title
