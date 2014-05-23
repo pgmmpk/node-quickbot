@@ -38,9 +38,8 @@ module.exports = function(mean) {
         app.get('/api/sensors/read', function(req, res) {
             if (sensors === undefined) {
                 res.json({status: 'Not ready yet'});
-		console.log("?");
             } else{
-		console.log("!");
+                sensors.read();
                 res.json({
                     timer: sensors.timer,
                     ticksLeft: sensors.ticksLeft,
