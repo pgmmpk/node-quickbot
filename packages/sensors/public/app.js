@@ -2,69 +2,34 @@
 
     var module = angular.module('sensors', ['ui.router']);
 
-    module.controller('SensorsCtrl', ['$scope', 'socket', function($scope, socket) {
+    module.controller('SensorsCtrl', ['$scope', '$http', '$interval', function($scope, $http, $interval) {
+        console.log('initializing controller');
+
+        $http.post('/api/sensors/start');
         
-        socket.on('heartbeat', function(data) {
-            console.log('heartbeat:', data.heartbeat);
+        var timer = $interval(function() {
+            $http.get('/api/sensors/read').success(function(sensors) {
+                $scope.timer = sensors.timer;
+                $scope.ticksLeft = sensors.ticksLeft;
+                $scope.ticksRight = sensors.ticksRight;
+                $scope.speedLeft = sensors.speedLeft;
+                $scope.speedRight = sensors.speedRight;
+                $scope.values = sensors.values;
+            });
+        }, 200);
+
+        $scope.$on('$destroy', function() {
+            console.log('destroying controller');
+            $interval.cancel(timer);
+            $http.post('/api/sensors/stop');
         });
-
-        socket.on('sensors', function(sensors) {
-            console.log(sensors);
-            $scope.timer = sensors.timer;
-            $scope.ticksLeft = sensors.ticksLeft;
-            $scope.ticksRight = sensors.ticksRight;
-            $scope.speedLeft = sensors.speedLeft;
-            $scope.speedRight = sensors.speedRight;
-            $scope.values = sensors.values;
-        });
-
-        $scope.ping = function() {
-            console.log('sending Hello')
-            socket.emit('ping', {ping: 'Privet'});
-        }
-    }]);
-
-    var socket;
-
-    module.factory('socket', ['$rootScope', function ($rootScope) {
-        return {
-            
-            on: function (eventName, callback) {
-                socket.on(eventName, function () {  
-                    var args = arguments;
-                    $rootScope.$apply(function () {
-                        callback.apply(socket, args);
-                    });
-                });
-            },
-          
-            emit: function (eventName, data, callback) {
-                socket.emit(eventName, data, function () {
-                    var args = arguments;
-                    $rootScope.$apply(function () {
-                        if (callback) {
-                            callback.apply(socket, args);
-                        }
-                    });
-                });
-            }
-        };
     }]);
 
     module.config(['$stateProvider', function($stateProvider) {
         $stateProvider.state('sensors', {
             url: '/sensors',
             templateUrl: '/sensors/public/index.html',
-            controller: 'SensorsCtrl',
-            onEnter: function() {
-                if (socket === undefined) {
-                    socket = io.connect();
-                }
-                socket.emit('eyb');
-            },
-            onExit: function() {
-                socket.emit('bye');
-            }
+            controller: 'SensorsCtrl'
         });
     }]);
 

@@ -12,7 +12,6 @@
     "express": "~4.0.0",
     "jade": "*",
     "body-parser": "~1.0.1",
-    "socket.io": "*",
     "q": "*",
     "async": "*"
   },
