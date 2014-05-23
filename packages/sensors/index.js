@@ -13,7 +13,6 @@ module.exports = function(mean) {
         
         app.post('/api/sensors/start', function(req, res) {
             qbapi.sensors(qbapi.defaultConfig, function(err, _sensors) {
-		    console.log("Sensor is READY!", err);
                 if (err) {
                     console.log('ERROR:', err);
                     return res.send(500);
@@ -21,8 +20,7 @@ module.exports = function(mean) {
                 
                 sensors = _sensors;
                 sensors.start();
-		console.log("SENSORS: ", sensors);
-                
+
                 res.json({status: 'OK'});
             });
         });
