@@ -16,7 +16,7 @@ module.exports = function(meany) {
 
     // bootstrap packages
     require('./packages/motors')(meany);
-    require('./packages/sensors-socketio')(meany);
+    require('./packages/sensors')(meany);
     require('./packages/adc')(meany);
 
     // configure page title

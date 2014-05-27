@@ -1,53 +1,70 @@
 var path = require('path'),
-    express = require('express');
+    express = require('express'),
+    routes = require('./server/routes');
 
 module.exports = function(meany) {
 
-    meany.configure(['meany.app', 'qbapi', function(app, qbapi) {
+    meany.configure(['meany.app', 'sockets', 'qbapi', function(app, sockets, qbapi) {
         app.use('/sensors/public', express.static(path.join(__dirname, '/public')));
 
         var timer;
         var clients = 0;
         var count = 0;
         var sensors;
-        
-        app.post('/api/sensors/start', function(req, res) {
-            qbapi.sensors(qbapi.defaultConfig, function(err, _sensors) {
-                if (err) {
-                    console.log('ERROR:', err);
-                    return res.send(500);
+
+        sockets.on('connection', function(socket) {
+            
+            if (timer !== undefined) {
+                socket.emit('You are not the first :(');
+            }
+            
+            socket.on('eyb', function() {
+                console.log('EYB', clients);
+                if (clients++ === 0) {
+                    qbapi.sensors(qbapi.defaultConfig, function(err, _sensors) {
+                        if (err) {
+                            console.log('ERROR:', err);
+                            return;
+                        }
+                        
+                        sensors = _sensors;
+
+                        sensors.start();
+                        
+                        var throttleCount = 0;
+                        
+                        timer = setInterval(function() {
+                            sensors.read();
+                            throttleCount ++;
+                            if (throttleCount === 10) {
+                                throttleCount = 0;
+                                socket.emit('sensors', {
+                                    timer: sensors.timer,
+                                    ticksLeft: sensors.ticksLeft,
+                                    ticksRight: sensors.ticksRight,
+                                    speedLeft: sensors.speedLeft,
+                                    speedRight: sensors.speedRight,
+                                    values: sensors.values
+                                });
+                            }
+                        }, 10);
+                    });
                 }
-
-                sensors = _sensors;
-                sensors.start();
-
-                res.json({status: 'OK'});
             });
-        });
-
-        app.post('/api/sensors/stop', function(req, res) {
-            if (sensors !== undefined) {
-                sensors.stop();
-                sensors = undefined;
-            }
-            res.json({status: 'OK'});
-        });
-
-        app.get('/api/sensors/read', function(req, res) {
-            if (sensors === undefined) {
-                res.json({status: 'Not ready yet'});
-            } else{
-                sensors.read();
-                res.json({
-                    timer: sensors.timer,
-                    ticksLeft: sensors.ticksLeft,
-                    ticksRight: sensors.ticksRight,
-                    speedLeft: sensors.speedLeft,
-                    speedRight: sensors.speedRight,
-                    values: sensors.values,
-                    status: 'OK'
-                });
-            }
+            
+            socket.on('bye', function() {
+                console.log('BYE');
+                if (--clients === 0) {
+                    sensors.stop();
+                    sensors = undefined;
+                    clearInterval(timer);
+                    timer = undefined;
+                }
+            });
+            
+            socket.on('ping', function(data) {
+                console.log(data.ping);
+            });
         });
     }]);
 
@@ -56,7 +73,11 @@ module.exports = function(meany) {
     meany.configure(['meany.pageBuilder', function(pageBuilder) {
         pageBuilder.addAngularModule('sensors');
         pageBuilder.aggregateScript(__dirname + '/public/app.js');
+        pageBuilder.aggregateScript(__dirname + '/public/d3.js');
+        pageBuilder.addScriptUrl('//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js');
+        pageBuilder.addScriptUrl('//cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js');
 
         pageBuilder.addMenu({link: 'sensors', title: 'Sensors'});
     }]);
+
 };
