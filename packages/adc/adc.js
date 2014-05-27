@@ -1,27 +1,12 @@
 module.exports = function(app, pruadc) {
 
-    var adc = undefined;
+    var adc;
     var running = false;
 
     app.post('/api/adc/setup', function(req, res) {
         if (running) {
             adc.stop();
             adc = undefined;
-        }
-
-        if (!adc) {
-            pruadc(function(err, a) {
-                if (err) {
-                    console.log('ERROR:', err);
-                    return res.send(500);
-                }
-                
-                adc = a;
-                
-                setup();
-            });
-        } else {
-            setup();
         }
 
         function setup() {
@@ -53,7 +38,22 @@ module.exports = function(app, pruadc) {
                 adc.encoder1Delay(+req.body.encoder1Delay);
             }
             
-            return res.json({status: 'OK'})
+            return res.json({status: 'OK'});
+        }
+
+        if (!adc) {
+            pruadc(function(err, a) {
+                if (err) {
+                    console.log('ERROR:', err);
+                    return res.send(500);
+                }
+                
+                adc = a;
+                
+                setup();
+            });
+        } else {
+            setup();
         }
     });
 

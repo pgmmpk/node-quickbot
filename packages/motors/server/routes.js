@@ -1,12 +1,17 @@
 module.exports = function(meany) {
 
     meany.configure(['meany.app', 'qbapi', function(app, qbapi) {
-        var motors = undefined;
+        var motors;
     
         app.route('/api/motors/run').post(function(req, res) {
             var torqueLeft = +req.body.torqueLeft;
             var torqueRight = +req.body.torqueRight;
-    
+
+            function runMotors() {
+                motors.run(torqueLeft, torqueRight);
+                return res.json({status: 'OK'});
+            }
+
             if (!motors) {
                 qbapi.motors(qbapi.defaultConfig, function(err, m) {
                     if (err) {
@@ -20,11 +25,6 @@ module.exports = function(meany) {
                 });
             } else {
                 runMotors();
-            }
-    
-            function runMotors() {
-                motors.run(torqueLeft, torqueRight);
-                return res.json({status: 'OK'});
             }
         });
     }]);

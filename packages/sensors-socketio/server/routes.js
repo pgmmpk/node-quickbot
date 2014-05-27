@@ -7,7 +7,7 @@ module.exports = function(meany) {
             console.log('Connected');
             sock.on('message', function() {
                 console.log('Received message');
-            })
+            });
         });
     }]);
 };

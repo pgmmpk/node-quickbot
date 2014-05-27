@@ -19,9 +19,9 @@
         });
 
         $scope.ping = function() {
-            console.log('sending Hello')
+            console.log('sending Hello');
             socket.emit('ping', {ping: 'Privet'});
-        }
+        };
     }]);
 
     var socket;

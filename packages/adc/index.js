@@ -1,1 +1,1 @@
-module.exports = function(mean) {}  
+module.exports = function(mean) {};
