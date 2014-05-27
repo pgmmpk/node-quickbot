@@ -1,5 +1,5 @@
 doctype html
-html(ng-app='ane')
+html(ng-app='meany')
     head
         title= title
         meta(charset='utf-8')
@@ -12,9 +12,9 @@ html(ng-app='ane')
         each s in scripts
             script(src=s)
 
-        script(src='ane/modules-aggregated.js')
+        script(src='/meany/modules-aggregated.js')
         script
-            != '(function(angular){ var module = angular.module("ane", ' + angularModules + ');\n'
+            != '(function(angular){ var module = angular.module("meany", ' + angularModules + ');\n'
             != 'module.config(["$stateProvider", "$locationProvider", function($stateProvider, $locationProvider) {\n'
             !=     '$locationProvider.html5Mode(true);\n'
             !=     '$stateProvider.state("home", { url: "/"});\n'

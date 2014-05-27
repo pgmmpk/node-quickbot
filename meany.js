@@ -1,7 +1,7 @@
-module.exports = function(mean) {
+module.exports = function(meany) {
 
     // pull in the quickbot-api package (required dependency)
-    mean.factory('qbapi', [function() {
+    meany.factory('qbapi', [function() {
         var qbapi;
         try {
             qbapi = require('quickbot-api');
@@ -12,15 +12,15 @@ module.exports = function(mean) {
         return qbapi;
     }]);
     
-    require('./packages/socketio')(mean);
+    require('./packages/socketio')(meany);
 
     // bootstrap packages
-    require('./packages/motors')(mean);
-    require('./packages/sensors-socketio')(mean);
-    require('./packages/adc')(mean);
-    
+    require('./packages/motors')(meany);
+    require('./packages/sensors-socketio')(meany);
+    require('./packages/adc')(meany);
+
     // configure page title
-    mean.run(['mean.pageBuilder', function(pageBuilder) {
+    meany.configure(['meany.pageBuilder', function(pageBuilder) {
         pageBuilder.title('QuickBot o^o');
     }]);
 

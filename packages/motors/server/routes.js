@@ -1,6 +1,6 @@
-module.exports = function(mean) {
+module.exports = function(meany) {
 
-    mean.run(['mean.app', 'qbapi', function(app, qbapi) {
+    meany.configure(['meany.app', 'qbapi', function(app, qbapi) {
         var motors = undefined;
     
         app.route('/api/motors/run').post(function(req, res) {

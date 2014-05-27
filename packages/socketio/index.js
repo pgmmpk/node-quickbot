@@ -1,8 +1,8 @@
 var io = require('socket.io');
 
-module.exports = function(mean) {
+module.exports = function(meany) {
 
-    mean.factory('sockets', ['mean.server', function(server) {
+    meany.factory('sockets', ['meany.server', function(server) {
         return io.listen(server).sockets;
     }]);
 };

@@ -2,15 +2,15 @@ var path = require('path'),
     express = require('express'),
     routes = require('./server/routes');
 
-module.exports = function(mean) {
+module.exports = function(meany) {
 
-    mean.run(['mean.app', function(app) {
+    meany.configure(['meany.app', function(app) {
         app.use('/motors/public', express.static(path.join(__dirname, '/public')));
     }]);
 
-    routes(mean);
+    routes(meany);
 
-    mean.run(['mean.pageBuilder', function(pageBuilder) {
+    meany.configure(['meany.pageBuilder', function(pageBuilder) {
         pageBuilder.addAngularModule('motors');
         pageBuilder.aggregateScript(__dirname + '/public/app.js');
         

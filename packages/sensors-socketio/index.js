@@ -2,9 +2,9 @@ var path = require('path'),
     express = require('express'),
     routes = require('./server/routes');
 
-module.exports = function(mean) {
+module.exports = function(meany) {
 
-    mean.run(['mean.app', 'sockets', 'qbapi', function(app, sockets, qbapi) {
+    meany.configure(['meany.app', 'sockets', 'qbapi', function(app, sockets, qbapi) {
         app.use('/sensors/public', express.static(path.join(__dirname, '/public')));
 
         var timer;
@@ -70,7 +70,7 @@ module.exports = function(mean) {
 
     //routes(mean);
 
-    mean.run(['mean.pageBuilder', function(pageBuilder) {
+    meany.configure(['meany.pageBuilder', function(pageBuilder) {
         pageBuilder.addAngularModule('sensors');
         pageBuilder.aggregateScript(__dirname + '/public/app.js');
         pageBuilder.addScriptUrl('//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js');

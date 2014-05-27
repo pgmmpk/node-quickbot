@@ -1,9 +1,9 @@
 var path = require('path'),
     express = require('express');
 
-module.exports = function(mean) {
+module.exports = function(meany) {
 
-    mean.run(['mean.app', 'qbapi', function(app, qbapi) {
+    meany.configure(['meany.app', 'qbapi', function(app, qbapi) {
         app.use('/sensors/public', express.static(path.join(__dirname, '/public')));
 
         var timer;
@@ -17,7 +17,7 @@ module.exports = function(mean) {
                     console.log('ERROR:', err);
                     return res.send(500);
                 }
-                
+
                 sensors = _sensors;
                 sensors.start();
 
@@ -53,11 +53,10 @@ module.exports = function(mean) {
 
     //routes(mean);
 
-    mean.run(['mean.pageBuilder', function(pageBuilder) {
+    meany.configure(['meany.pageBuilder', function(pageBuilder) {
         pageBuilder.addAngularModule('sensors');
         pageBuilder.aggregateScript(__dirname + '/public/app.js');
 
         pageBuilder.addMenu({link: 'sensors', title: 'Sensors'});
     }]);
-
 };
