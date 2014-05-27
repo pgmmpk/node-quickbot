@@ -11,7 +11,7 @@
             link: function(scope, element, attrs) {
                 var svg = d3.select(element[0]).append('svg').style('width', '100%');
 
-                var xScale = d3.scale.linear().domain([0, 100]).range([0, 300]);
+                var xScale = d3.scale.linear().domain([0, 150]).range([0, 300]);
                 var yScale = d3.scale.linear().domain([0, 4096]).range([0, 300]);
 
                 scope.$watch('data', function() {
