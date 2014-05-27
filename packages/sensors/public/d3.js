@@ -23,7 +23,7 @@
                         return i * 30;
                     }).attr('y', 0)
                     .attr('fill', 'green');
-                });
+                }, true);
             }
         };
     }]);
