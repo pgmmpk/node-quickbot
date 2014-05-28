@@ -18,15 +18,17 @@
                 var height = attrs.height || 300;
 
                 var xScale = d3.scale.linear().domain([0, 150]).range([0, width]);
-                var yScale = d3.scale.linear().domain([4096, 0]).range([0, height]);
+                var yScale = d3.scale.linear().domain([0, 4096]).range([0, height]);
 
                 function update(selection) {
                     selection.attr('height', function(d, i) {
-                        return height - yScale(d);
+                        return yScale(d);
                     }).attr('width', xScale(20))
                     .attr('x', function(d, i) {
                         return xScale(i * 30);
-                    }).attr('y', yScale(0))
+                    }).attr('y', function(d, i) {
+                        return height - yScale(d);
+                    })
                     .attr('fill', 'green');
                 }
 
