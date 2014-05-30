@@ -10,23 +10,45 @@ module.exports = {
     },
 
     sensors: function(config, callback) {
-        callback(null, {
-            start: function() {
-                console.log('MOCK sensors.start()');
-            },
-            stop: function() {
-                console.log('MOCK sensors.stop()');
-            },
-            read: function() {
-                console.log('MOCK sensors.read()');
-            },
+        var s = {
             timer: 1010,
             ticksLeft: 123,
             ticksRight: 456,
             speedLeft: 20.2,
             speedRight: 22.1,
             values: [25, 56, 54, 78, 50]
-        });
+        };
+        
+        s.start = function() {
+            console.log('MOCK sensors.start()');
+        };
+        
+        s.read = function() {
+            console.log('MOCK sensors.read()');
+            s.timer ++;
+            if (s.timer % 100 === 0) {
+                s.ticksLeft ++; 
+                s.speedLeft = Math.random() * 30.0;
+            }
+            if (s.timer % 150 === 0) {
+                s.ticksRight ++;
+                s.speedRight = Math.random() * 20.0;
+            }
+            
+            if (s.timer % 50 === 0) {
+                s.values[0] = Math.floor(Math.random() * 1000);
+                s.values[1] = Math.floor(Math.random() * 1000);
+                s.values[2] = Math.floor(Math.random() * 1000);
+                s.values[3] = Math.floor(Math.random() * 1000);
+                s.values[4] = Math.floor(Math.random() * 1000);
+            }
+        };
+        
+        s.stop = function() {
+            console.log('MOCK sensors.stop()');
+        };
+
+        callback(null, s);
     },
 
     qb: function(config, callback) {
