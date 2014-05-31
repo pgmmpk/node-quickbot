@@ -18,6 +18,7 @@ module.exports = function(meany) {
     require('./packages/motors')(meany);
     require('./packages/sensors')(meany);
     require('./packages/adc')(meany);
+    require('./packages/qb')(meany);
 
     // configure page title
     meany.configure(['meany.pageBuilder', function(pageBuilder) {
