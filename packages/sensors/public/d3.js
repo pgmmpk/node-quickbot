@@ -44,7 +44,7 @@
                                             {x: -35, y: 60},
                                             {x:  -45, y: 40}
                                             ]) + 'Z';
-                var beamColor = '#ccffcc'
+                var beamColor = '#ccffcc';
                 var group = svg.append('g')
                     .attr("transform", function(d) { return "translate(200,200)"; });
 

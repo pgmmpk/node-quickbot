@@ -4,6 +4,14 @@
 
     module.controller('SensorsCtrl', ['$scope', 'socket', function($scope, socket) {
         
+        console.log('Connected');
+        socket.emit('eyb');
+        
+        $scope.$on('$destroy', function() {
+            console.log('Disconnect');
+            socket.emit('bye');
+        });
+        
         socket.on('heartbeat', function(data) {
             console.log('heartbeat:', data.heartbeat);
         });
@@ -24,26 +32,26 @@
         };
     }]);
 
-    var socket;
-
     module.factory('socket', ['$rootScope', function ($rootScope) {
+        var sock = io.connect();
+
         return {
             
             on: function (eventName, callback) {
-                socket.on(eventName, function () {  
+                sock.on(eventName, function () {  
                     var args = arguments;
                     $rootScope.$apply(function () {
-                        callback.apply(socket, args);
+                        callback.apply(sock, args);
                     });
                 });
             },
           
             emit: function (eventName, data, callback) {
-                socket.emit(eventName, data, function () {
+                sock.emit(eventName, data, function () {
                     var args = arguments;
                     $rootScope.$apply(function () {
                         if (callback) {
-                            callback.apply(socket, args);
+                            callback.apply(sock, args);
                         }
                     });
                 });
@@ -55,16 +63,7 @@
         $stateProvider.state('sensors', {
             url: '/sensors',
             templateUrl: '/sensors/public/index.html',
-            controller: 'SensorsCtrl',
-            onEnter: function() {
-                if (socket === undefined) {
-                    socket = io.connect();
-                }
-                socket.emit('eyb');
-            },
-            onExit: function() {
-                socket.emit('bye');
-            }
+            controller: 'SensorsCtrl'
         });
     }]);
 
