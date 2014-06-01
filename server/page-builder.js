@@ -64,7 +64,7 @@ module.exports = function(meany) {
 
         function aggregateJsFiles() {
             var filecontents = filesToAggregate.map(function(path) {
-                return fs.readFileSync(path);
+                return '/* ' + path + '*/\n' + fs.readFileSync(path);
             });
 
             return filecontents.join('\n');

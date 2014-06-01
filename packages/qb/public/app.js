@@ -2,57 +2,6 @@
 
     var module = angular.module('qb', ['ui.router']);
 
-    module.controller('QbCtrl', ['$scope', '$http', function($scope, $http) {
-
-        $scope.is_running = $http.get('/qb/is_running')
-
-        socket.on('heartbeat', function(data) {
-            console.log('heartbeat:', data.heartbeat);
-        });
-
-        socket.on('sensors', function(sensors) {
-            console.log(sensors);
-            $scope.timer = sensors.timer;
-            $scope.ticksLeft = sensors.ticksLeft;
-            $scope.ticksRight = sensors.ticksRight;
-            $scope.speedLeft = sensors.speedLeft;
-            $scope.speedRight = sensors.speedRight;
-            $scope.values = sensors.values;
-        });
-
-        $scope.ping = function() {
-            console.log('sending Hello');
-            socket.emit('ping', {ping: 'Privet'});
-        };
-    }]);
-
-    var socket;
-
-    module.factory('socket', ['$rootScope', function ($rootScope) {
-        return {
-            
-            on: function (eventName, callback) {
-                socket.on(eventName, function () {  
-                    var args = arguments;
-                    $rootScope.$apply(function () {
-                        callback.apply(socket, args);
-                    });
-                });
-            },
-          
-            emit: function (eventName, data, callback) {
-                socket.emit(eventName, data, function () {
-                    var args = arguments;
-                    $rootScope.$apply(function () {
-                        if (callback) {
-                            callback.apply(socket, args);
-                        }
-                    });
-                });
-            }
-        };
-    }]);
-
     module.config(['$stateProvider', function($stateProvider) {
         $stateProvider.state('qb', {
             url: '/qb',
@@ -72,7 +21,7 @@
                 };
                 $scope.stop = function() {
                     if ($scope.is_running) {
-                        $http.post('/qb/stop')
+                        $http.post('/qb/stop');
                         $scope.is_running = false;
                     }
                 };
