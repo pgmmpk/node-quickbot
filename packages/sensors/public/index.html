@@ -3,36 +3,6 @@
         <div>
             {{status}}
         </div>
-        <div class="form-group">
-            <label class="control-label col-md-2">Timer</label>
-            <div class="col-md-2">
-                <input ng-model="timer" class="form-control" >
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-2">Ticks (left)</label>
-            <div class="col-md-2">
-                <input ng-model="ticksLeft" class="form-control" >
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-2">Ticks (right)</label>
-            <div class="col-md-2">
-                <input ng-model="ticksRight" class="form-control" >
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-2">Speed (left)</label>
-            <div class="col-md-2">
-                <input ng-model="speedLeft" class="form-control" >
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-2">Speed (right)</label>
-            <div class="col-md-2">
-                <input ng-model="speedRight" class="form-control" >
-            </div>
-        </div>
-        <livechart data='values' height='300' width='500' />
+        <livechart data='values' ticks-left='ticksLeft' ticks-right='ticksRight' speed-left='speedLeft' speed-right='speedRight' height='300' width='500' />
     </form>
 </div>

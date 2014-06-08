@@ -9,7 +9,11 @@
                 width: '@',
                 height: '@',
 
-                data: '='
+                data: '=',
+                ticksLeft: '=',
+                ticksRight: '=',
+                speedLeft: '=',
+                speedRight: '='
             },
             link: function(scope, element, attrs) {
                 var svg = d3.select(element[0]).append('svg').style('width', '100%');
@@ -53,6 +57,22 @@
                 group.append('path').attr('d', wheelShape).attr('stroke', 'none').attr('fill', 'black')
                     .attr('transform', 'translate(40,-25)');
                 group.append('path').attr('d', robotShape).attr('stroke', 'none').attr('fill', 'red');
+
+                group.append('g').attr('transform', 'translate(-55, -20)')
+                    .append('text').attr('font-family', 'Sans-Serif').attr('font-size', '20px')
+                    .attr('class', 'left-wheel-ticks').attr('text-anchor', 'end')
+                    .text('0000');
+                group.append('g').attr('transform', 'translate(55, -20)')
+                    .append('text').attr('font-family', 'Sans-Serif').attr('font-size', '20px')
+                    .attr('class', 'right-wheel-ticks').attr('text-anchor', 'start')
+                    .text('1111');
+                group.append('g').attr('transform', 'translate(-55, -15)')
+                    .append('rect').attr('class', 'left-wheel-speed').attr('fill', 'crimson')
+                    .attr('x', '-20').attr('y', '0').attr('height', '5').attr('width', '20');
+                group.append('g').attr('transform', 'translate(55, -15)')
+                    .append('rect').attr('class', 'right-wheel-speed').attr('fill', 'crimson')
+                    .attr('x', '0').attr('y', '0').attr('height', '5').attr('width', '20');
+                
                 group.append('g').attr('transform', 'translate(-45,20)')
                     .append('g').attr('transform', 'rotate(-90)')
                     .append('path').attr('class', 'sensor')
@@ -91,9 +111,28 @@
 
                 scope.$watch('data', function() {
                     var data = scope.data || [];
-                    var paths = svg.selectAll('.sensor').data(data);
+                    var sensor = svg.selectAll('.sensor').data(data);
+                    sensor.call(update);
+                });
+                
+                scope.$watch('ticksLeft', function() {
+                    svg.select('.left-wheel-ticks').text('' + scope.ticksLeft);
+                });
 
-                    paths.call(update);
+                scope.$watch('ticksRight', function() {
+                    svg.select('.right-wheel-ticks').text('' + scope.ticksRight);
+                });
+
+                scope.$watch('speedLeft', function() {
+                    if (scope.speedLeft !== undefined) {
+                        svg.select('.left-wheel-speed').attr('x', -scope.speedLeft).attr('width', scope.speedLeft);
+                    }
+                });
+
+                scope.$watch('speedRight', function() {
+                    if (scope.speedRight !== undefined) {
+                        svg.select('.right-wheel-speed').attr('width', scope.speedRight);
+                    }
                 });
             }
         };
