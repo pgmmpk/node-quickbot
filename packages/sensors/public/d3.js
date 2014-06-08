@@ -61,17 +61,17 @@
                 group.append('g').attr('transform', 'translate(-55, -20)')
                     .append('text').attr('font-family', 'Sans-Serif').attr('font-size', '20px')
                     .attr('class', 'left-wheel-ticks').attr('text-anchor', 'end')
-                    .text('0000');
+                    .text('0');
                 group.append('g').attr('transform', 'translate(55, -20)')
                     .append('text').attr('font-family', 'Sans-Serif').attr('font-size', '20px')
                     .attr('class', 'right-wheel-ticks').attr('text-anchor', 'start')
-                    .text('1111');
+                    .text('0');
                 group.append('g').attr('transform', 'translate(-55, -15)')
                     .append('rect').attr('class', 'left-wheel-speed').attr('fill', 'crimson')
-                    .attr('x', '-20').attr('y', '0').attr('height', '5').attr('width', '20');
+                    .attr('x', '-20').attr('y', '0').attr('height', '5').attr('width', '0');
                 group.append('g').attr('transform', 'translate(55, -15)')
                     .append('rect').attr('class', 'right-wheel-speed').attr('fill', 'crimson')
-                    .attr('x', '0').attr('y', '0').attr('height', '5').attr('width', '20');
+                    .attr('x', '0').attr('y', '0').attr('height', '5').attr('width', '0');
                 
                 group.append('g').attr('transform', 'translate(-45,20)')
                     .append('g').attr('transform', 'rotate(-90)')
@@ -116,11 +116,15 @@
                 });
                 
                 scope.$watch('ticksLeft', function() {
-                    svg.select('.left-wheel-ticks').text('' + scope.ticksLeft);
+                    if (scope.ticksRight !== undefined) {
+                        svg.select('.left-wheel-ticks').text('' + scope.ticksLeft);
+                    }
                 });
 
                 scope.$watch('ticksRight', function() {
-                    svg.select('.right-wheel-ticks').text('' + scope.ticksRight);
+                    if (scope.ticksRight !== undefined) {
+                        svg.select('.right-wheel-ticks').text('' + scope.ticksRight);
+                    }
                 });
 
                 scope.$watch('speedLeft', function() {
