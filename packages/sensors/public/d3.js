@@ -63,7 +63,7 @@
                     .append('path').attr('class', 'sensor')
                     .attr('d', sensorBeam).attr('stroke', 'none').attr('fill', beamColor)
                     .attr('transform', 'scale(10,10)');
-                group.append('g').attr('transform', 'translate(0,-75)')
+                group.append('g').attr('transform', 'translate(0,-80)')
                     .append('g').attr('transform', 'rotate(-0)')
                     .append('path').attr('class', 'sensor')
                     .attr('d', sensorBeam).attr('stroke', 'none').attr('fill', beamColor)
