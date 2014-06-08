@@ -50,7 +50,7 @@
                                             ]) + 'Z';
                 var beamColor = '#ccffcc';
                 var group = svg.append('g')
-                    .attr("transform", function(d) { return "translate(200,200)"; });
+                    .attr("transform", function(d) { return "translate(300,300)"; });
 
                 group.append('path').attr('d', wheelShape).attr('stroke', 'none').attr('fill', 'black')
                     .attr('transform', 'translate(-40,-25)');
@@ -125,13 +125,13 @@
 
                 scope.$watch('speedLeft', function() {
                     if (scope.speedLeft !== undefined) {
-                        svg.select('.left-wheel-speed').attr('x', -scope.speedLeft).attr('width', scope.speedLeft);
+                        svg.select('.left-wheel-speed').attr('x', -scope.speedLeft*5).attr('width', scope.speedLeft*5);
                     }
                 });
 
                 scope.$watch('speedRight', function() {
                     if (scope.speedRight !== undefined) {
-                        svg.select('.right-wheel-speed').attr('width', scope.speedRight);
+                        svg.select('.right-wheel-speed').attr('width', scope.speedRight*5);
                     }
                 });
             }
